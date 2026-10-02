@@ -17,6 +17,7 @@
 # Usage:
 #   ./setup.sh              # create container + install everything
 #   ./setup.sh launch       # launch Fusion 360 (after setup)
+#   ./setup.sh fix-browser  # sign-in link does not open Firefox
 #   ./setup.sh uninstall    # remove the distrobox container
 
 set -euo pipefail
@@ -52,6 +53,38 @@ fi
 
 in_box() { distrobox enter "$CONTAINER_NAME" -- "$@"; }
 in_box_env() { distrobox enter "$CONTAINER_NAME" -- "${ENV_ARGS[@]}" "$@"; }
+
+# The container's xdg-open is a distrobox shim that hands URLs to the HOST, so
+# the sign-in link Wine opens never reaches the Firefox installed in the
+# container (or opens nothing at all). This wrapper sits first in PATH for the
+# Fusion launcher and opens web links with the container's Firefox instead.
+BIN_DIR="$HOME/.local/share/fusion360-bin"
+install_browser_wrapper() {
+  mkdir -p "$BIN_DIR"
+  cat > "$BIN_DIR/xdg-open" <<'WRAP'
+#!/bin/sh
+case "$1" in
+  http://*|https://*) exec firefox "$1" ;;
+  *) exec /usr/bin/xdg-open "$@" ;;
+esac
+WRAP
+  # Runs inside the container, so PATH is the container's, not the host's.
+  cat > "$BIN_DIR/fusion-launch" <<'WRAP'
+#!/bin/sh
+export BROWSER=firefox
+export PATH="$HOME/.local/share/fusion360-bin:$PATH"
+exec "$HOME/.autodesk_fusion/bin/autodesk_fusion_launcher.sh" "$@"
+WRAP
+  chmod +x "$BIN_DIR/xdg-open" "$BIN_DIR/fusion-launch"
+}
+patch_shortcut() {
+  local desktop="$HOME/.local/share/applications/wine/Programs/Autodesk/1/Autodesk Fusion.desktop"
+  [ -f "$desktop" ] || return 0
+  local distrobox_bin; distrobox_bin="$(command -v distrobox)"
+  # No DISPLAY/XAUTHORITY here: a desktop launcher starts inside the session.
+  sed -i "s|^Exec=.*|Exec=$distrobox_bin enter $CONTAINER_NAME -- $BIN_DIR/fusion-launch|" "$desktop"
+  update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+}
 
 case "${1:-install}" in
 
@@ -102,22 +135,24 @@ install)
     PATH="$WINE_BUILD_DIR/bin:$PATH" \
     "$HOME/.autodesk_fusion/bin/winetricks" -q dxvk
 
-  log "Pointing the desktop shortcut at the container..."
-  DESKTOP_FILE="$HOME/.local/share/applications/wine/Programs/Autodesk/1/Autodesk Fusion.desktop"
-  if [ -f "$DESKTOP_FILE" ]; then
-    DISTROBOX_BIN="$(command -v distrobox)"
-    # No DISPLAY/XAUTHORITY here: a desktop launcher starts inside the session,
-    # so distrobox inherits the real values.
-    sed -i "s|^Exec=.*autodesk_fusion_launcher.sh\$|Exec=$DISTROBOX_BIN enter $CONTAINER_NAME -- $HOME/.autodesk_fusion/bin/autodesk_fusion_launcher.sh|" "$DESKTOP_FILE"
-    update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
-  fi
+  log "Wiring the container's Firefox in as the browser, and fixing the desktop shortcut..."
+  install_browser_wrapper
+  patch_shortcut
 
   log "Done. Run '$0 launch' to start Fusion 360."
   ;;
 
 launch)
   log "Launching Fusion 360 inside '$CONTAINER_NAME'..."
-  in_box_env bash -c 'exec "$HOME/.autodesk_fusion/bin/autodesk_fusion_launcher.sh"'
+  install_browser_wrapper
+  in_box_env "$BIN_DIR/fusion-launch"
+  ;;
+
+fix-browser)
+  log "Installing the xdg-open wrapper and updating the shortcut..."
+  install_browser_wrapper
+  patch_shortcut
+  log "Done. Start Fusion with '$0 launch' and try the sign-in again."
   ;;
 
 uninstall)
@@ -128,7 +163,7 @@ uninstall)
   ;;
 
 *)
-  echo "Usage: $0 [install|launch|uninstall]"
+  echo "Usage: $0 [install|launch|fix-browser|uninstall]"
   exit 1
   ;;
 esac
