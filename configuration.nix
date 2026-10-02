@@ -109,7 +109,6 @@
       distrobox
       btop
       gh
-      github-desktop
       vscode
       kicad
       orca-slicer
