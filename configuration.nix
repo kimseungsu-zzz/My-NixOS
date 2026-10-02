@@ -113,7 +113,6 @@
       kicad
       orca-slicer
       brave
-      wine64
       spotify
       vlc
       nodejs
