@@ -115,6 +115,9 @@
       brave
       wine64
       spotify
+      vlc
+      nodejs
+      python3
 
   ];
 
