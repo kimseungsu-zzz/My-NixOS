@@ -115,7 +115,6 @@
       orca-slicer
       brave
       wine64
-      rPackages.Microsoft365R
       spotify
 
   ];
