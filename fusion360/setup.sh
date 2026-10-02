@@ -38,8 +38,13 @@ for cmd in distrobox podman; do
   }
 done
 
+# Plasma 6 on Wayland starts XWayland on demand; a terminal opened before that
+# can lack DISPLAY even though the :0 socket is there.
+if [ -z "${DISPLAY:-}" ] && [ -S /tmp/.X11-unix/X0 ]; then
+  export DISPLAY=:0
+fi
 if [ -z "${DISPLAY:-}" ]; then
-  echo "DISPLAY is not set. Run this from a graphical KDE session (Konsole)." >&2
+  echo "DISPLAY is not set and no X socket was found. Run this from Konsole in the KDE session (not over ssh or a TTY)." >&2
   exit 1
 fi
 
