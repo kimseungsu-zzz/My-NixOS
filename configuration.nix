@@ -91,12 +91,22 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # Fusion 360 runs in a distrobox container (see fusion360/setup.sh).
+  # hardware.graphics exposes Mesa (Intel iGPU/Arc Vulkan) at /run/opengl-driver,
+  # which distrobox bind-mounts into the container; 32-bit is needed for Wine.
+  virtualisation.podman.enable = true;
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
    environment.systemPackages = with pkgs; [
   #   vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
       wget
       git
+      distrobox
       btop
       gh
       github-desktop

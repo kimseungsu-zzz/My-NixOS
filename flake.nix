@@ -44,7 +44,7 @@
         src = pkgs.fetchurl {
           url = "https://github.com/wpilibsuite/vscode-wpilib/releases/download/v${wpilibExtVersion}/vscode-wpilib-${wpilibExtVersion}.vsix";
           name = "vscode-wpilib-${wpilibExtVersion}.zip";
-          hash = lib.fakeHash; # run `nix build` once and paste the reported hash
+          hash = "sha256-Whxogf+i3iQMaYfBbhA1m7rVVQ2ia46qMJlKCw3f7Oo=";
         };
         nativeBuildInputs = [ pkgs.unzip ];
         sourceRoot = ".";
