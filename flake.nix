@@ -181,18 +181,23 @@
       };
 
       # nixos-rebuild switch --flake .#kimseungsu
-      nixosConfigurations.kimseungsu = nixpkgs.lib.nixosSystem {
-        inherit system;
-        modules = [
-          ./configuration.nix
-          {
-            nix.settings.experimental-features = [ "nix-command" "flakes" ];
-            # Enable once the two lib.fakeHash values above are filled in
-            # (`nix build .#wpilib` reports them); until then the system
-            # build would fail on the hash mismatch.
-            # environment.systemPackages = [ wpilib ];
-          }
-        ];
+      # `nixos` is an alias: nixos-rebuild looks up the *current* hostname,
+      # which is still "nixos" until the first switch applies kimseungsu.
+      nixosConfigurations = rec {
+        kimseungsu = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = [
+            ./configuration.nix
+            {
+              nix.settings.experimental-features = [ "nix-command" "flakes" ];
+              # Enable once the two lib.fakeHash values above are filled in
+              # (`nix build .#wpilib` reports them); until then the system
+              # build would fail on the hash mismatch.
+              # environment.systemPackages = [ wpilib ];
+            }
+          ];
+        };
+        nixos = kimseungsu;
       };
     };
 }
