@@ -75,7 +75,7 @@
 
       gradleDist = pkgs.fetchzip {
         url = "https://services.gradle.org/distributions/gradle-${gradleVersion}-bin.zip";
-        hash = lib.fakeHash; # run `nix build` once and paste the reported hash
+        hash = "sha256-xLfK22+qSEneoJhXqT6AM8s011j8eOL3BRtQb3QXyNE=";
       };
 
       # payload/ holds the toolchains, desktop tools and maven repositories.
@@ -190,9 +190,7 @@
             ./configuration.nix
             {
               nix.settings.experimental-features = [ "nix-command" "flakes" ];
-              # Enable once the two lib.fakeHash values above are filled in
-              # (`nix build .#wpilib` reports them); until then the system
-              # build would fail on the hash mismatch.
+              # Uncomment once `nix build .#wpilib` succeeds, to install it system-wide.
               # environment.systemPackages = [ wpilib ];
             }
           ];
