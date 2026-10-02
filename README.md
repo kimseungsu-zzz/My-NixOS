@@ -6,7 +6,5 @@ NixOS flake for the `kimseungsu` machine.
 sudo nixos-rebuild switch --flake .#kimseungsu
 ```
 
-Apps that need an FHS system run in Ubuntu distrobox containers (podman):
-
-- Fusion 360: `bash fusion360/setup.sh`
-- WPILib VMX 2020: `scripts/nixos-distrobox.sh` in the WPILibInstaller-Avalonia repo
+WPILib VMX 2020 runs in an Ubuntu distrobox container (podman):
+`scripts/nixos-distrobox.sh` in the WPILibInstaller-Avalonia repo.
