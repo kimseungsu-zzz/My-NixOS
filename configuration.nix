@@ -91,8 +91,9 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # Fusion 360 runs in a distrobox container (see fusion360/setup.sh).
-  # hardware.graphics exposes Mesa (Intel iGPU/Arc Vulkan) at /run/opengl-driver,
+  # Fusion 360 (fusion360/setup.sh) and WPILib VMX 2020 (WPILibInstaller-Avalonia,
+  # scripts/nixos-distrobox.sh) run in Ubuntu distrobox containers.
+  # hardware.graphics exposes Mesa (Intel Iris Xe Vulkan/OpenGL) at /run/opengl-driver,
   # which distrobox bind-mounts into the container; 32-bit is needed for Wine.
   virtualisation.podman.enable = true;
   hardware.graphics = {
