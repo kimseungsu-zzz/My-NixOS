@@ -19,6 +19,10 @@
     enable = true;
     type = "ibus";
     ibus.engines = with pkgs.ibus-engines; [ hangul ];
+    # Plasma Wayland: KWin starts IBus itself (kwinrc InputMethod in home/plasma.nix) and
+    # talks to apps over the Wayland text-input protocol, so GTK_IM_MODULE/QT_IM_MODULE
+    # must stay unset. XMODIFIERS (XWayland/Wine) is still set.
+    ibus.waylandFrontend = true;
   };
 
   # Needed for home-manager dconf.settings (ibus-hangul keys).
