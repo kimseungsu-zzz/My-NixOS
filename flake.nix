@@ -33,6 +33,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # KakaoTalk on Wine (dev-environment flake; wrapped in modules/kakaotalk.nix).
+    kakaotalk = {
+      url = "git+https://github.com/kimseungsu-zzz/nixos-kakaotalk";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # KDE Plasma settings as code (home.nix, programs.plasma).
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
@@ -45,7 +51,7 @@
     };
   };
 
-  outputs = { nixpkgs, hnc, fusion360, studica, titan-config, home-manager, plasma-manager, ... }: {
+  outputs = { nixpkgs, hnc, fusion360, studica, titan-config, kakaotalk, home-manager, plasma-manager, ... }: {
     # nixos-rebuild switch --flake .#linux
     # `nixos` is an alias: nixos-rebuild looks up the *current* hostname.
     nixosConfigurations = rec {
@@ -57,6 +63,7 @@
           fusion360.nixosModules.default
           studica.nixosModules.default
           titan-config.nixosModules.default
+          (import ./modules/kakaotalk.nix kakaotalk)
           { nix.settings.experimental-features = [ "nix-command" "flakes" ]; }
           home-manager.nixosModules.home-manager
           {
