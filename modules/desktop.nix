@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   # KDE Plasma on the Wayland session (X server kept for XWayland apps).
@@ -13,6 +13,13 @@
   };
 
   services.printing.enable = true;
+
+  # Korean input: install the engine here instead of relying on the hnc module.
+  i18n.inputMethod = {
+    enable = true;
+    type = "ibus";
+    ibus.engines = with pkgs.ibus-engines; [ hangul ];
+  };
 
   # Needed for home-manager dconf.settings (ibus-hangul keys).
   programs.dconf.enable = true;
