@@ -26,6 +26,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Studica Titan Config & Update App (Qt port). The flake lives in the titan-config/
+    # subdirectory of this private repo; fetched over HTTPS like hnc.
+    titan-config = {
+      url = "git+https://github.com/kimseungsu-zzz/nixos-SCP?dir=titan-config";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # KDE Plasma settings as code (home.nix, programs.plasma).
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
@@ -38,7 +45,7 @@
     };
   };
 
-  outputs = { nixpkgs, hnc, fusion360, studica, home-manager, plasma-manager, ... }: {
+  outputs = { nixpkgs, hnc, fusion360, studica, titan-config, home-manager, plasma-manager, ... }: {
     # nixos-rebuild switch --flake .#linux
     # `nixos` is an alias: nixos-rebuild looks up the *current* hostname.
     nixosConfigurations = rec {
@@ -49,6 +56,7 @@
           hnc.nixosModules.default
           fusion360.nixosModules.default
           studica.nixosModules.default
+          titan-config.nixosModules.default
           { nix.settings.experimental-features = [ "nix-command" "flakes" ]; }
           home-manager.nixosModules.home-manager
           {

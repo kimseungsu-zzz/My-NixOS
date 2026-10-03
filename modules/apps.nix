@@ -14,6 +14,9 @@
     users = [ "linux" ];
   };
 
+  # Studica Titan Config & Update App (udev rules for 0483:5740 / df11, dfu-util).
+  programs.titan-config.enable = true;
+
   # WPILib VMX 2020 (WPILibInstaller-Avalonia, scripts/nixos-distrobox.sh) runs in
   # an Ubuntu distrobox container. hardware.graphics exposes Mesa at
   # /run/opengl-driver, which distrobox bind-mounts into the container.
