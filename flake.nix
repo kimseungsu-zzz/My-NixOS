@@ -20,8 +20,9 @@
     };
 
     # Studica Hardware Manager (repackaged .deb: udev rules, dfu-util, dialout).
+    # Private repo: fetched over HTTPS with the gh credentials, like hnc.
     studica = {
-      url = "github:kimseungsu-zzz/nixos-SHM";
+      url = "git+https://github.com/kimseungsu-zzz/nixos-SHM";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
