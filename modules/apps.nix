@@ -8,6 +8,12 @@
   # Runs through XWayland on the Plasma Wayland session (bundled Qt 5.11 has no Wayland plugin).
   programs.hoffice11.enable = true;
 
+  # Studica Hardware Manager. users get added to the dialout group (re-login needed).
+  programs.studica-hardware-manager = {
+    enable = true;
+    users = [ "linux" ];
+  };
+
   # WPILib VMX 2020 (WPILibInstaller-Avalonia, scripts/nixos-distrobox.sh) runs in
   # an Ubuntu distrobox container. hardware.graphics exposes Mesa at
   # /run/opengl-driver, which distrobox bind-mounts into the container.
