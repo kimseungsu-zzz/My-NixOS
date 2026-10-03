@@ -20,8 +20,9 @@ sudo nixos-rebuild switch --flake .#linux
 
 ## Notes
 
-- `hnc` (Hancom Office) is a private repo fetched over SSH. Update with
-  `nix flake update hnc`.
+- `hnc` (Hancom Office) is a private repo fetched over HTTPS with the git
+  credentials from `gh auth login`. Update with `nix flake update hnc`, and
+  rebuild with `--sudo` so the fetch runs as your user, not root.
 - Fusion 360 comes from `fusion360-nixos` (untested draft). After a rebuild,
   run `fusion360-install` once, then `fusion360`.
 - Old builds are cleaned up automatically: a weekly `nix.gc` deletes

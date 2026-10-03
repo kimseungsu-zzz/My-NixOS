@@ -5,10 +5,11 @@
     # Matches system.stateVersion in configuration.nix.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
-    # Hancom Office (private repo): fetched over SSH, so this needs an SSH key
-    # with access to the repo. Update with `nix flake update hnc`.
+    # Hancom Office (private repo): fetched over HTTPS with the git credentials
+    # from `gh auth login` (port 22 is blocked on this network). Update with
+    # `nix flake update hnc`.
     hnc = {
-      url = "git+ssh://git@github.com/kimseungsu-zzz/nixos-hnc";
+      url = "git+https://github.com/kimseungsu-zzz/nixos-hnc";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
