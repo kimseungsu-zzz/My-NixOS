@@ -24,6 +24,24 @@
       colorScheme = "BreezeDark";
     };
 
+    # Top bar: floating, twice the default height, two thirds of the screen
+    # width, centred. Widgets are the Plasma defaults.
+    # Set screenWidth to the real horizontal resolution (in pixels).
+    panels = [
+      (
+        let screenWidth = 1920; in
+        {
+          location = "top";
+          floating = true;
+          height = 88;
+          alignment = "center";
+          lengthMode = "custom";
+          minLength = screenWidth * 2 / 3;
+          maxLength = screenWidth * 2 / 3;
+        }
+      )
+    ];
+
     configFile = {
       # Touchpad. The section name is hardware-specific (vendor/product/name).
       kcminputrc."Libinput/5349/25870/ZNT0001:00 14E5:650E Touchpad".NaturalScroll = true;
