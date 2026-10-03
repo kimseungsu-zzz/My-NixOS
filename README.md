@@ -22,6 +22,8 @@ sudo nixos-rebuild switch --flake .#linux
 
 - `hnc` (Hancom Office) is a private repo fetched over SSH. Update with
   `nix flake update hnc`.
+- Fusion 360 comes from `fusion360-nixos` (untested draft). After a rebuild,
+  run `fusion360-install` once, then `fusion360`.
 - Old builds are cleaned up automatically: a weekly `nix.gc` deletes
   generations older than 7 days and `/boot` keeps the last 5.
 - `screenWidth` in `home/plasma.nix` sets the top panel width.
