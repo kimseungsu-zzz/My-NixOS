@@ -6,10 +6,9 @@
   programs.plasma = {
     enable = true;
 
-    # false: only the settings listed here are enforced; everything else stays
-    # as the GUI left it. true would reset every unlisted Plasma setting to its
-    # default on activation, panels and wallpaper included.
-    overrideConfig = false;
+    # true: every Plasma setting not listed here is reset to its default on
+    # activation, panels and wallpaper included. This file is the whole desktop.
+    overrideConfig = true;
 
     # Captured from the running desktop with
     #   nix run github:nix-community/plasma-manager
