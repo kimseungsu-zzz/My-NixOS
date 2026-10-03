@@ -14,6 +14,9 @@
 
   services.printing.enable = true;
 
+  # Needed for home-manager dconf.settings (ibus-hangul keys).
+  programs.dconf.enable = true;
+
   # Sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
