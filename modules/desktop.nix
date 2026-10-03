@@ -8,7 +8,8 @@
 
   services.xserver.xkb = {
     layout = "kr";
-    variant = "";
+    variant = "kr104";
+    options = "korean:ralt_hangul,korean:rctrl_hanja";
   };
 
   services.printing.enable = true;

@@ -57,6 +57,21 @@ in
       kdeglobals.KDE.AnimationDurationFactor = 1.414213562373095;
       kwinrc.Xwayland.Scale = 1;
       plasma-localerc.Formats.LANG = "en_US.UTF-8";
+
+      # Korean keyboard. Plasma on Wayland reads the layout from kxkbrc (the NixOS
+      # xkb options only reach SDDM/X11). Right Alt = Hangul, Right Ctrl = Hanja
+      # for keyboards without dedicated keys. overrideConfig resets this file, so it
+      # has to be declared here.
+      kxkbrc.Layout = {
+        Use = true;
+        LayoutList = "kr";
+        VariantList = "kr104";
+        Options = "korean:ralt_hangul,korean:rctrl_hanja";
+        ResetOldOptions = true;
+      };
+
+      # IBus input method on the Wayland session (ibus-hangul comes from the hnc module).
+      kwinrc.Wayland.InputMethod = "/run/current-system/sw/share/applications/org.freedesktop.IBus.Panel.Wayland.Gtk3.desktop";
     };
 
     # Add more as you change them, e.g. via the plasma-manager options:
