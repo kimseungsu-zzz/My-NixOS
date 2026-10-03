@@ -1,14 +1,14 @@
 {
-  description = "kimseungsu NixOS system";
+  description = "linux NixOS system";
 
   inputs = {
     # Matches system.stateVersion in configuration.nix.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
-    # Hancom Office (private repo): 로컬 클론을 직접 참조한다. `git pull` 후
-    # `nix flake update hnc` 로 갱신.
+    # Hancom Office (private repo): fetched over SSH, so this needs an SSH key
+    # with access to the repo. Update with `nix flake update hnc`.
     hnc = {
-      url = "git+file:///home/linux/github/nixos-hnc";
+      url = "git+ssh://git@github.com/kimseungsu-zzz/nixos-hnc";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -25,10 +25,10 @@
   };
 
   outputs = { nixpkgs, hnc, home-manager, plasma-manager, ... }: {
-    # nixos-rebuild switch --flake .#kimseungsu
+    # nixos-rebuild switch --flake .#linux
     # `nixos` is an alias: nixos-rebuild looks up the *current* hostname.
     nixosConfigurations = rec {
-      kimseungsu = nixpkgs.lib.nixosSystem {
+      linux = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
           ./configuration.nix
@@ -48,7 +48,7 @@
           }
         ];
       };
-      nixos = kimseungsu;
+      nixos = linux;
     };
   };
 }
