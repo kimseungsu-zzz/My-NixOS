@@ -24,7 +24,7 @@
       colorScheme = "BreezeDark";
     };
 
-    # Top bar: floating, twice the default height, two thirds of the screen
+    # Top bar: floating, 58px high, two thirds of the screen
     # width, centred. Widgets are the Plasma defaults.
     # Set screenWidth to the real horizontal resolution (in pixels).
     panels = [
@@ -33,7 +33,7 @@
         {
           location = "top";
           floating = true;
-          height = 88;
+          height = 58;
           alignment = "center";
           lengthMode = "custom";
           minLength = screenWidth * 2 / 3;
