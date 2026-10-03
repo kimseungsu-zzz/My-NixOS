@@ -91,6 +91,11 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # Hancom Office (hwp, hword, hcl, hsl). Module: github.com/kimseungsu-zzz/nixos-hnc
+  # koreanSupport (default on): ko_KR locale + ibus-hangul + CJK fonts.
+  # Runs through XWayland on the Plasma Wayland session (bundled Qt 5.11 has no Wayland plugin).
+  programs.hoffice11.enable = true;
+
   # WPILib VMX 2020 (WPILibInstaller-Avalonia, scripts/nixos-distrobox.sh) runs in
   # an Ubuntu distrobox container. hardware.graphics exposes Mesa at
   # /run/opengl-driver, which distrobox bind-mounts into the container.
