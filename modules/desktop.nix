@@ -6,6 +6,14 @@
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
+  # Log in automatically at boot (no SDDM password prompt). The screen lock is already
+  # disabled in home/plasma.nix (kscreenlockerrc).
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "linux";
+  };
+  services.displayManager.defaultSession = "plasma";
+
   services.xserver.xkb = {
     layout = "kr";
     variant = "kr104";

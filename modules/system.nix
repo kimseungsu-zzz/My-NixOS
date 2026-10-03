@@ -12,7 +12,7 @@
   # Intel laptop panel: PSR2 selective fetch fails ("Selective fetch area calculation
   # failed in pipe A" in dmesg) and causes black flicker when only part of the screen
   # updates (e.g. rotating a 3D view). Panel Self Refresh off fixes it.
-  boot.kernelParams = [ "i915.enable_psr=0" ];
+  boot.kernelParams = [ "i915.enable_psr=0" "consoleblank=0" ];
 
   networking.hostName = "linux";
   networking.networkmanager.enable = true;

@@ -27,6 +27,26 @@ in
       colorScheme = "BreezeDark";
     };
 
+    # Never dim, turn off the display or suspend (on AC and battery). overrideConfig resets
+    # powerdevilrc, so it is declared here. Lid action is left at the Plasma default.
+    powerdevil = {
+      AC = {
+        dimDisplay.enable = false;
+        turnOffDisplay.idleTimeout = "never";
+        autoSuspend.action = "nothing";
+      };
+      battery = {
+        dimDisplay.enable = false;
+        turnOffDisplay.idleTimeout = "never";
+        autoSuspend.action = "nothing";
+      };
+      lowBattery = {
+        dimDisplay.enable = false;
+        turnOffDisplay.idleTimeout = "never";
+        autoSuspend.action = "nothing";
+      };
+    };
+
     # Top bar: floating, 58px high, two thirds of the screen
     # width, centred. Widgets are the Plasma defaults.
     panels = [
