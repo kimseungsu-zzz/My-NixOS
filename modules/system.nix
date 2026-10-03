@@ -15,6 +15,15 @@
   boot.kernelParams = [ "i915.enable_psr=0" "consoleblank=0" ];
 
   networking.hostName = "linux";
+
+  # Shutdown used to wait for the full stop timeout on "User Manager for UID 1000".
+  # user@.service ships its own long TimeoutStopSec, so it is overridden separately
+  # from the global default. Stuck user processes (e.g. Wine) get killed after 15s.
+  systemd.settings.Manager.DefaultTimeoutStopSec = "15s";
+  systemd.services."user@" = {
+    overrideStrategy = "asDropin";
+    serviceConfig.TimeoutStopSec = "15s";
+  };
   networking.networkmanager.enable = true;
 
   time.timeZone = "Asia/Seoul";
