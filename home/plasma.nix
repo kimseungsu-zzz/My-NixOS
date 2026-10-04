@@ -127,21 +127,31 @@
       kwinrc.Xwayland.Scale = 1;
       plasma-localerc.Formats.LANG = "en_US.UTF-8";
 
-      # KWin scripts/effects. Krohnkite tiles per monitor (every screen has its own layout).
-      # Shortcuts: Meta+H/J/K/L focus left/down/up/right, Meta+Shift+H/J/K/L move the window,
-      # Meta+Backslash next layout, Meta+T tile, Meta+M monocle, Meta+F toggle floating.
-      # overrideConfig resets kwinrc, so the script is declared here.
-      kwinrc.Plugins.krohnkiteEnabled = true;
-      # Layout per monitor: three columns on the 3440x1440 ultrawide, master/stack on the laptop.
-      kwinrc."Script-krohnkite".screenDefaultLayout = "HDMI-A-1:threecolumn,eDP-1:tile";
-      kwinrc."Script-krohnkite".screenGapLeft = 8;
-      kwinrc."Script-krohnkite".screenGapRight = 8;
-      kwinrc."Script-krohnkite".screenGapTop = 8;
-      kwinrc."Script-krohnkite".screenGapBottom = 8;
-      kwinrc."Script-krohnkite".screenGapBetween = 8;
-      # Wine windows (Fusion 360, KakaoTalk, ...) have the .exe name as class; tiling resizes
-      # them against their own limits, so keep them floating. The list is exact class names.
-      kwinrc."Script-krohnkite".floatingClass = "fusion360.exe,kakaotalk.exe,adskidentitymanager.exe,msedgewebview2.exe,explorer.exe,winecfg.exe,wine,steam,spotify";
+      # KWin scripts/effects. Karousel is the scrollable tiling script (shortcuts: Meta+A/D to
+      # move focus, Meta+Shift+A/D to move a window, Meta+R to cycle widths, Meta+Space to
+      # toggle floating for the focused window). overrideConfig resets kwinrc, so declare it.
+      kwinrc.Plugins.karouselEnabled = true;
+      # Karousel tiles every normal window, which breaks Wine apps (Fusion 360, KakaoTalk): their
+      # windows get resized/stolen. Wine windows have the .exe name as class, so keep them floating.
+      # This replaces the built-in rule list, so the defaults are repeated (with [.] for the dot).
+      kwinrc."Script-karousel".windowRules = builtins.toJSON [
+        { class = ".*[.]exe"; tile = false; }
+        { class = "spotify"; tile = false; }
+        { class = "(org[.]kde[.])?plasmashell"; tile = false; }
+        { class = "(org[.]kde[.])?polkit-kde-authentication-agent-1"; tile = false; }
+        { class = "(org[.]kde[.])?kded6"; tile = false; }
+        { class = "(org[.]kde[.])?kcalc"; tile = false; }
+        { class = "(org[.]kde[.])?kfind"; tile = true; }
+        { class = "(org[.]kde[.])?kruler"; tile = false; }
+        { class = "(org[.]kde[.])?krunner"; tile = false; }
+        { class = "(org[.]kde[.])?yakuake"; tile = false; }
+        { class = "(org[.]kde[.])?spectacle"; tile = false; }
+        { class = "wl-copy|wl-paste"; caption = "wl-clipboard"; tile = false; }
+        { class = "steam"; caption = "Steam Big Picture Mode"; tile = false; }
+        { class = "zoom"; caption = "Zoom Cloud Meetings|zoom|zoom <2>"; tile = false; }
+        { class = "jetbrains-.*"; caption = "splash"; tile = false; }
+        { class = "jetbrains-.*"; caption = "Unstash Changes|Paths Affected by stash@.*"; tile = true; }
+      ];
       kwinrc.Plugins.kwin4_effect_geometry_changeEnabled = true;
 
       # Default terminal for Dolphin / "Open terminal here" etc.
