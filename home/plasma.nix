@@ -141,7 +141,7 @@
       kwinrc."Script-krohnkite".screenGapBetween = 8;
       # Wine windows (Fusion 360, KakaoTalk, ...) have the .exe name as class; tiling resizes
       # them against their own limits, so keep them floating. The list is exact class names.
-      kwinrc."Script-krohnkite".floatingClass = "fusion360.exe,kakaotalk.exe,adskidentitymanager.exe,msedgewebview2.exe,explorer.exe,winecfg.exe,wine,steam";
+      kwinrc."Script-krohnkite".floatingClass = "fusion360.exe,kakaotalk.exe,adskidentitymanager.exe,msedgewebview2.exe,explorer.exe,winecfg.exe,wine,steam,spotify";
       kwinrc.Plugins.kwin4_effect_geometry_changeEnabled = true;
 
       # Default terminal for Dolphin / "Open terminal here" etc.
