@@ -14,11 +14,6 @@
   # updates (e.g. rotating a 3D view). Panel Self Refresh off fixes it.
   # quiet/splash/loglevel: no kernel or initrd text between the boot menu and the desktop.
   boot.kernelParams = [ "i915.enable_psr=0" "consoleblank=0" "quiet" "splash" "loglevel=3" "udev.log_level=3" "rd.systemd.show_status=false"
-    # The ultrawide on HDMI-A-1 only advertises 3440x1440@50 in its EDID (it ran 110 Hz on
-    # Windows). The EDID lists 100 Hz as its top mode (48-100 Hz range). i915 rejects HDMI modes above
-    # 594 MHz: CVT-RB at 110 Hz is 600.7 MHz and at 109 Hz 594.9 MHz ("User-defined mode not supported"
-    # in dmesg), so use the monitor's own 100 Hz.
-    "video=HDMI-A-1:3440x1440MR@100"
   ];
   boot.consoleLogLevel = 0;
   boot.initrd.verbose = false;

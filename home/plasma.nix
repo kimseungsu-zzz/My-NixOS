@@ -89,7 +89,7 @@
         maxLength = 1280;
         # Visible on an empty desktop; hides only when a window overlaps it, and
         # comes back when the pointer touches the top edge.
-        hiding = "dodgewindows";
+        hiding = "none";
       }
     ];
 
