@@ -37,14 +37,16 @@ let
     '';
   };
 
-  busctl = "${pkgs.systemd}/bin/busctl --user call org.kde.KWin /Scripting org.kde.kwin.Scripting";
+  kw = "${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file kwinrc --group Plugins --key karouselEnabled";
+  kwinReconfigure = "${pkgs.systemd}/bin/busctl --user call org.kde.KWin /KWin org.kde.KWin reconfigure";
 
-  # Reload the script without logging out (KWin keeps the version it loaded at login in memory).
+  # Reload the script the way System Settings does it (switch the plugin off and on and let KWin
+  # reconfigure). Loading the QML file by hand leaves the script half-working.
   karouselReload = pkgs.writeShellScriptBin "karousel-reload" ''
-    ${busctl} unloadScript s karousel
-    ${busctl} loadDeclarativeScript ss ${karousel}/share/kwin/scripts/karousel/contents/ui/main.qml karousel
-    ${busctl} start
-    echo "loaded: ${karousel}"
+    ${kw} false && ${kwinReconfigure}
+    sleep 2
+    ${kw} true && ${kwinReconfigure}
+    echo "reloaded: ${karousel}"
   '';
 
   # Where is the active window? (HDMI is above the laptop panel: y < 1440 is HDMI, y >= 1440 is the laptop.)
