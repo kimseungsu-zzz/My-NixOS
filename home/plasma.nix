@@ -103,6 +103,13 @@
     # Karousel's toggle floating: Meta+Space plus Meta+F as a fallback in case Meta+Space is grabbed.
     shortcuts.kwin."karousel-window-toggle-floating" = [ "Meta+Space" "Meta+F" ];
 
+    # Move between monitors with simple keys (the fork's defaults, Meta+Alt+Shift+arrows, never reached
+    # KWin here: the letters C and D were typed instead).
+    shortcuts.kwin."karousel-column-move-to-next-screen" = "Meta+F10";
+    shortcuts.kwin."karousel-column-move-to-previous-screen" = "Meta+F9";
+    shortcuts.kwin."karousel-focus-next-screen" = "Meta+F12";
+    shortcuts.kwin."karousel-focus-previous-screen" = "Meta+F11";
+
     # Print / Meta+Shift+S: region screenshot with Spectacle.
     hotkeys.commands."screenshot-region" = {
       name = "Region screenshot";
