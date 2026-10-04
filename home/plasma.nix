@@ -81,9 +81,13 @@
         floating = true;
         height = 58;
         alignment = "center";
-        lengthMode = "fill";
-        # Hidden until the pointer touches the top edge.
-        hiding = "autohide";
+        # Fixed 1280px, centred (same on every monitor).
+        lengthMode = "custom";
+        minLength = 1280;
+        maxLength = 1280;
+        # Visible on an empty desktop; hides only when a window overlaps it, and
+        # comes back when the pointer touches the top edge.
+        hiding = "dodgewindows";
       }
     ];
 
