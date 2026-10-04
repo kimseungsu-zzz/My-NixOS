@@ -36,7 +36,22 @@ let
       runHook postInstall
     '';
   };
+
+  busctl = "${pkgs.systemd}/bin/busctl --user call org.kde.KWin /Scripting org.kde.kwin.Scripting";
+
+  # Reload the script without logging out (KWin keeps the version it loaded at login in memory).
+  karouselReload = pkgs.writeShellScriptBin "karousel-reload" ''
+    ${busctl} unloadScript s karousel
+    ${busctl} loadDeclarativeScript ss ${karousel}/share/kwin/scripts/karousel/contents/ui/main.qml karousel
+    ${busctl} start
+    echo "loaded: ${karousel}"
+  '';
+
+  # Where is the active window? (HDMI is above the laptop panel: y < 1440 is HDMI, y >= 1440 is the laptop.)
+  karouselWhere = pkgs.writeShellScriptBin "karousel-where" ''
+    ${pkgs.kdotool}/bin/kdotool getactivewindow getwindowgeometry
+  '';
 in
 {
-  environment.systemPackages = [ karousel ];
+  environment.systemPackages = [ karousel karouselReload karouselWhere ];
 }
