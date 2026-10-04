@@ -100,6 +100,9 @@
     };
     shortcuts."services/org.kde.krunner.desktop"."_launch" = "Alt+F2";
 
+    # Karousel's toggle floating: Meta+Space plus Meta+F as a fallback in case Meta+Space is grabbed.
+    shortcuts.kwin."karousel-window-toggle-floating" = [ "Meta+Space" "Meta+F" ];
+
     # Print / Meta+Shift+S: region screenshot with Spectacle.
     hotkeys.commands."screenshot-region" = {
       name = "Region screenshot";

@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 
 {
   imports = [
@@ -13,6 +13,12 @@
   dconf.settings."desktop/ibus/general" = {
     preload-engines = [ "hangul" ];
     engines-order = [ "hangul" ];
+  };
+
+  # IBus' default trigger is Super+Space (switch input method). There is only one engine, so it is
+  # not needed, and it swallows Meta+Space before it reaches Karousel's "toggle floating".
+  dconf.settings."desktop/ibus/general/hotkey" = {
+    triggers = lib.hm.gvariant.mkEmptyArray lib.hm.gvariant.type.string;
   };
 
   # Switch Korean/English with the Hangul key (it reaches the compositor as the
