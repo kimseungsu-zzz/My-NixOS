@@ -1,10 +1,5 @@
 { ... }:
 
-let
-  # Horizontal resolution of the primary screen in pixels (the logical one if
-  # display scaling is on). The top panel is sized from it.
-  screenWidth = 1920;
-in
 {
   programs.plasma = {
     enable = true;
@@ -76,8 +71,8 @@ in
       command = "terminator";
     };
 
-    # Top bar: floating, 58px high, two thirds of the screen
-    # width, centred. Widgets are the Plasma defaults.
+    # Top bar: floating, 58px high, filling the width of each screen (so it adapts to
+    # whatever monitor it is on). Widgets are the Plasma defaults.
     panels = [
       {
         location = "top";
@@ -86,9 +81,7 @@ in
         floating = true;
         height = 58;
         alignment = "center";
-        lengthMode = "custom";
-        minLength = screenWidth * 2 / 3;
-        maxLength = screenWidth * 2 / 3;
+        lengthMode = "fill";
       }
     ];
 
