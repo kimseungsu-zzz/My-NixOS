@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   programs.firefox.enable = true;
@@ -30,6 +30,11 @@
   # Ctrl+Alt+T shortcut in home/plasma.nix).
   environment.plasma6.excludePackages = [ pkgs.kdePackages.konsole ];
 
+  # Ventoy is flagged insecure in nixpkgs: its prebuilt boot images and tools are binary blobs
+  # that cannot be audited (https://github.com/NixOS/nixpkgs/issues/404663). Only Ventoy is
+  # allowed through; any other insecure package is still refused.
+  nixpkgs.config.allowInsecurePredicate = pkg: lib.hasPrefix "ventoy" (lib.getName pkg);
+
   # CLI tools and anything the system itself needs. GUI apps live in
   # home/packages.nix.
   environment.systemPackages = with pkgs; [
@@ -41,5 +46,7 @@
     nodejs
     python3
     terminator
+    rpi-imager     # Raspberry Pi Imager
+    ventoy-full-gtk  # bootable USB creator (run with sudo or via polkit)
   ];
 }

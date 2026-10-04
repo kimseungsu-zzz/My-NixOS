@@ -81,6 +81,8 @@ in
     panels = [
       {
         location = "top";
+        # Show the panel on every monitor.
+        screen = "all";
         floating = true;
         height = 58;
         alignment = "center";
