@@ -125,6 +125,9 @@
 
       kdeglobals.KDE.AnimationDurationFactor = 1.414213562373095;
       kwinrc.Xwayland.Scale = 1;
+      # New windows open on the screen the mouse is on (the default follows the last focused window).
+      # Karousel puts a window into the grid of the screen KWin placed it on.
+      kwinrc.Windows.ActiveMouseScreen = true;
       plasma-localerc.Formats.LANG = "en_US.UTF-8";
 
       # KWin scripts/effects. Karousel is the scrollable tiling script (shortcuts: Meta+A/D to
