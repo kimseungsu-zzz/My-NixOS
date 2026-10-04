@@ -27,9 +27,11 @@
         size = 24;
       };
       windowDecorations = {
-        library = "org.kde.kwin.aurorae";
-        theme = "__aurorae__svg__CatppuccinMocha-Modern";
+        library = "org.kde.breeze";
+        theme = "Breeze";
       };
+      # No splash screen: the plain base colour below shows straight away.
+      splashScreen.theme = "None";
       # Catppuccin Mocha "base" (#1e1e2e).
       wallpaperPlainColor = "30,30,46";
     };
@@ -91,7 +93,17 @@
       }
     ];
 
+    # Print / Meta+Shift+S: region screenshot with Spectacle.
+    hotkeys.commands."screenshot-region" = {
+      name = "Region screenshot";
+      key = "Meta+Shift+S";
+      command = "spectacle --region";
+    };
+
     configFile = {
+      # Window shadows (Breeze decoration): medium size, 80% strength.
+      "breezerc"."Common"."ShadowSize" = "ShadowMedium";
+      "breezerc"."Common"."ShadowStrength" = 200;
       # Touchpad. The section name is hardware-specific (vendor/product/name).
       kcminputrc."Libinput/5349/25870/ZNT0001:00 14E5:650E Touchpad".NaturalScroll = true;
 

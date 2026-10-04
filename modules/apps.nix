@@ -46,7 +46,13 @@
     nodejs
     python3
     terminator
-    rpi-imager     # Raspberry Pi Imager
+    # Run through XWayland: the Wayland Qt backend fails to open the window on this setup.
+    (symlinkJoin {
+      name = "rpi-imager-xcb";
+      paths = [ rpi-imager ];
+      nativeBuildInputs = [ makeWrapper ];
+      postBuild = "wrapProgram $out/bin/rpi-imager --set QT_QPA_PLATFORM xcb";
+    })
     ventoy-full-gtk  # bootable USB creator (run with sudo or via polkit)
   ];
 }

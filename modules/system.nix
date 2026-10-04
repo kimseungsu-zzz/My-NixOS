@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   # Bootloader. Keep only the latest generations in the boot menu; older ones
@@ -12,7 +12,18 @@
   # Intel laptop panel: PSR2 selective fetch fails ("Selective fetch area calculation
   # failed in pipe A" in dmesg) and causes black flicker when only part of the screen
   # updates (e.g. rotating a 3D view). Panel Self Refresh off fixes it.
-  boot.kernelParams = [ "i915.enable_psr=0" "consoleblank=0" ];
+  # quiet/splash/loglevel: no kernel or initrd text between the boot menu and the desktop.
+  boot.kernelParams = [ "i915.enable_psr=0" "consoleblank=0" "quiet" "splash" "loglevel=3" "udev.log_level=3" "rd.systemd.show_status=false" ];
+  boot.consoleLogLevel = 0;
+  boot.initrd.verbose = false;
+  boot.loader.timeout = 0;   # hold Space at boot to get the menu
+
+  # Graphical boot splash (hands over to SDDM/autologin without a text console).
+  boot.plymouth = {
+    enable = true;
+    theme = "catppuccin-mocha";
+    themePackages = [ (pkgs.catppuccin-plymouth.override { variant = "mocha"; }) ];
+  };
 
   networking.hostName = "linux";
 
