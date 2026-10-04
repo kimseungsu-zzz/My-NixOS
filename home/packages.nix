@@ -26,5 +26,6 @@ in
     vlc
     kicad
     orca-slicer
+    vicinae
   ];
 }

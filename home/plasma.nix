@@ -93,6 +93,14 @@
       }
     ];
 
+    # Alt+Space: Vicinae launcher (Spotlight / Raycast style). KRunner keeps only Alt+F2.
+    hotkeys.commands."vicinae" = {
+      name = "Vicinae launcher";
+      key = "Alt+Space";
+      command = "vicinae toggle";
+    };
+    shortcuts."services/org.kde.krunner.desktop"."_launch" = "Alt+F2";
+
     # Print / Meta+Shift+S: region screenshot with Spectacle.
     hotkeys.commands."screenshot-region" = {
       name = "Region screenshot";

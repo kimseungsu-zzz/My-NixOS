@@ -20,6 +20,22 @@
   dconf.settings."desktop/ibus/engine/hangul" = {
     switch-keys = "Hangul,Shift+space";
   };
+  # Vicinae launcher: Catppuccin Mocha. The daemon is started with the session; Alt+Space (set in
+  # home/plasma.nix) runs `vicinae toggle`.
+  xdg.configFile."vicinae/settings.json".text = builtins.toJSON {
+    theme = {
+      light = { name = "catppuccin-mocha"; icon_theme = "auto"; };
+      dark = { name = "catppuccin-mocha"; icon_theme = "auto"; };
+    };
+  };
+  xdg.configFile."autostart/vicinae.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Name=Vicinae
+    Exec=vicinae server --replace
+    X-KDE-autostart-after=panel
+  '';
+
   # Terminator with the Catppuccin Mocha palette. The file is a read-only symlink into the
   # store, so changes made in Terminator's preferences window are not saved; edit it here.
   xdg.configFile."terminator/config" = {

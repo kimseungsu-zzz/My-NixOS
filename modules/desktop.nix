@@ -35,6 +35,38 @@
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
+    settings = {
+      General.FastConnectable = true;
+      # Re-establish a dropped link to a paired device a few times.
+      Policy = {
+        AutoEnable = true;
+        ReconnectAttempts = 7;
+        ReconnectIntervals = "1,2,4,8,16,32,64";
+      };
+    };
+  };
+
+  # BlueZ does not dial out to paired devices by itself after boot (it waits for the device to
+  # connect). Connect every paired device once Bluetooth is up; ones that are off just time out.
+  systemd.services.bluetooth-autoconnect = {
+    description = "Connect paired Bluetooth devices at boot";
+    after = [ "bluetooth.service" ];
+    wants = [ "bluetooth.service" ];
+    wantedBy = [ "multi-user.target" ];
+    path = [ pkgs.bluez pkgs.coreutils ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      sleep 5
+      bluetoothctl power on
+      for dev in $(bluetoothctl devices Paired | cut -d' ' -f2); do
+        bluetoothctl trust "$dev"
+        timeout 25 bluetoothctl connect "$dev" &
+      done
+      wait
+    '';
   };
 
   # Korean input: install the engine here instead of relying on the hnc module.
