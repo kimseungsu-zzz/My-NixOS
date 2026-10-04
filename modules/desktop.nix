@@ -69,18 +69,6 @@
     '';
   };
 
-  # Flatpak, managed declaratively by nix-flatpak (flake input): Flathub is added and the apps below
-  # are installed on activation. OrcaSlicer comes from Flatpak because the nixpkgs build crashes
-  # on webkitgtk 2.54 (its own WebKit is bundled in the Flatpak runtime).
-  services.flatpak = {
-    enable = true;
-    packages = [ "com.orcaslicer.OrcaSlicer" ];
-    update.auto = {
-      enable = true;
-      onCalendar = "weekly";
-    };
-  };
-
   # Korean input: install the engine here instead of relying on the hnc module.
   i18n.inputMethod = {
     enable = true;
