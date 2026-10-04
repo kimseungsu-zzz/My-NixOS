@@ -27,7 +27,10 @@ let
       if [ "$(id -u)" = 0 ]; then
         exec ${rpiImagerPatched}/bin/rpi-imager "$@"
       fi
-      exec /run/wrappers/bin/pkexec env \n        WAYLAND_DISPLAY="$WAYLAND_DISPLAY" XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \n        DISPLAY="$DISPLAY" XAUTHORITY="$XAUTHORITY" \n        ${rpiImagerPatched}/bin/rpi-imager "$@"
+      exec /run/wrappers/bin/pkexec env \
+        WAYLAND_DISPLAY="$WAYLAND_DISPLAY" XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \
+        DISPLAY="$DISPLAY" XAUTHORITY="$XAUTHORITY" \
+        ${rpiImagerPatched}/bin/rpi-imager "$@"
       EOF
       chmod +x $out/bin/rpi-imager
     '';
