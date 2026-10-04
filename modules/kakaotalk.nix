@@ -28,7 +28,7 @@ let
   };
 in
 {
-  environment.systemPackages = [ run install desktop ];
+  environment.systemPackages = [ run install desktop upstream.kakaotalk-window-info ];
 
   # The wrapper runs with LANG/LC_ALL=ko_KR.UTF-8.
   i18n.extraLocales = [ "ko_KR.UTF-8/UTF-8" ];

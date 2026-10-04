@@ -53,9 +53,12 @@ in
     window-rules = [
       {
         description = "KakaoTalk minimum size";
+        # Wine reports the window class as the exe name; the regex ignores case so it
+        # matches "kakaotalk.exe" and "KakaoTalk.exe" alike. Check the real values with
+        # `kakaotalk-window-info` (click a KakaoTalk window).
         match.window-class = {
-          value = "kakaotalk.exe";
-          type = "substring";
+          value = "(?i)kakaotalk";
+          type = "regex";
         };
         apply.minsize = {
           value = "330,450";
