@@ -30,6 +30,24 @@
     triggers = lib.hm.gvariant.mkEmptyArray lib.hm.gvariant.type.string;
   };
 
+  # With the KWin-managed ibus-daemon (--panel disable) nobody selects an engine after login ("No global
+  # engine" in the ibus log), so XIM clients such as Hancom Office only ever get Latin letters. Select the
+  # Hangul engine once ibus is up; it keeps the Latin/Hangul toggle (Hangul key, Shift+Space) of the engine.
+  xdg.configFile."autostart/ibus-select-hangul.desktop".text = let
+    script = pkgs.writeShellScript "ibus-select-hangul" ''
+      for _ in $(seq 1 40); do
+        if ${pkgs.ibus}/bin/ibus engine hangul >/dev/null 2>&1; then exit 0; fi
+        sleep 1
+      done
+    '';
+  in ''
+    [Desktop Entry]
+    Type=Application
+    Name=Select the Hangul engine in ibus
+    Exec=${script}
+    X-KDE-autostart-after=panel
+  '';
+
   # Switch Korean/English with the Hangul key (it reaches the compositor as the
   # Hangul keysym, see the xkb options in home/plasma.nix) or Shift+Space.
   dconf.settings."desktop/ibus/engine/hangul" = {
