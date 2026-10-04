@@ -53,7 +53,38 @@ let
   karouselWhere = pkgs.writeShellScriptBin "karousel-where" ''
     ${pkgs.kdotool}/bin/kdotool getactivewindow getwindowgeometry
   '';
+
+  # Prints what KWin itself reports about screens, the pointer and the windows (put on the clipboard and
+  # printed), to see which values Karousel is given.
+  kwinDumpJs = pkgs.writeText "kwin-dump.js" ''
+    var out = [];
+    var scr = workspace.screens;
+    for (var i = 0; i < scr.length; i++) {
+        var g = scr[i].geometry;
+        out.push("screen" + i + " " + scr[i].name + " " + g.x + "," + g.y + " " + g.width + "x" + g.height);
+    }
+    out.push("cursor " + Math.round(workspace.cursorPos.x) + "," + Math.round(workspace.cursorPos.y));
+    out.push("activeScreen " + workspace.activeScreen.name);
+    var ws = workspace.windowList ? workspace.windowList() : workspace.windows;
+    for (var j = 0; j < ws.length; j++) {
+        var w = ws[j];
+        if (!w.normalWindow) continue;
+        var f = w.frameGeometry;
+        out.push("win[" + String(w.caption).substring(0, 14) + "] frame " + Math.round(f.x) + "," + Math.round(f.y) + " " + Math.round(f.width) + "x" + Math.round(f.height) + " output=" + (w.output ? w.output.name : "none"));
+    }
+    callDBus("org.kde.klipper", "/klipper", "org.kde.klipper.klipper", "setClipboardContents", out.join(" || "));
+  '';
+
+  karouselDump = pkgs.writeShellScriptBin "kwin-dump" ''
+    ${busctl} unloadScript s kwin-dump >/dev/null 2>&1 || true
+    ${busctl} loadScript ss ${kwinDumpJs} kwin-dump >/dev/null
+    ${busctl} start >/dev/null
+    sleep 1
+    ${pkgs.systemd}/bin/busctl --user call org.kde.klipper /klipper org.kde.klipper.klipper getClipboardContents | tr '|' '
+' | sed 's/^ *//'
+    ${busctl} unloadScript s kwin-dump >/dev/null 2>&1 || true
+  '';
 in
 {
-  environment.systemPackages = [ karousel karouselReload karouselWhere ];
+  environment.systemPackages = [ karousel karouselReload karouselWhere karouselDump ];
 }
