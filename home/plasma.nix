@@ -87,8 +87,7 @@
         lengthMode = "custom";
         minLength = 1280;
         maxLength = 1280;
-        # Visible on an empty desktop; hides only when a window overlaps it, and
-        # comes back when the pointer touches the top edge.
+        # Hidden until the pointer touches the top edge (dodgewindows made plasmashell segfault).
         hiding = "autohide";
       }
     ];
