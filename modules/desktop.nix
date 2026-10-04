@@ -22,7 +22,7 @@
 
   services.printing.enable = true;
 
-  # Scrollable tiling (niri / PaperWM style, multi-monitor fork: modules/karousel.nix) for KWin, plus
+  # Scrollable tiling (niri / PaperWM style, multi-monitor fork, source in the nix-packages repo) for KWin, plus
   # the animation for windows that a
   # script moves or resizes. Enabled in home/plasma.nix (kwinrc Plugins).
   environment.systemPackages = [

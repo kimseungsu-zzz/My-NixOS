@@ -8,7 +8,6 @@
     ./modules/desktop.nix
     ./modules/apps.nix
     ./modules/theme.nix
-    ./modules/karousel.nix
     ./modules/vbt.nix
   ];
 }
