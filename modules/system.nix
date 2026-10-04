@@ -16,7 +16,6 @@
   boot.kernelParams = [ "i915.enable_psr=0" "consoleblank=0" "quiet" "splash" "loglevel=3" "udev.log_level=3" "rd.systemd.show_status=false" ];
   boot.consoleLogLevel = 0;
   boot.initrd.verbose = false;
-  boot.loader.timeout = 0;   # hold Space at boot to get the menu
 
   # Graphical boot splash (hands over to SDDM/autologin without a text console).
   boot.plymouth = {
