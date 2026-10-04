@@ -52,6 +52,8 @@
   # Hangul keysym, see the xkb options in home/plasma.nix) or Shift+Space.
   dconf.settings."desktop/ibus/engine/hangul" = {
     switch-keys = "Hangul,Shift+space";
+    # Start in Hangul mode instead of Latin (the engine's default), so a freshly selected engine types Korean.
+    initial-input-mode = "hangul";
   };
   # Vicinae launcher: Catppuccin Mocha. The daemon is started with the session; Alt+Space (set in
   # home/plasma.nix) runs `vicinae toggle`.
