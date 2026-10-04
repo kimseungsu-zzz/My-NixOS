@@ -107,6 +107,12 @@ in
       kwinrc.Xwayland.Scale = 1;
       plasma-localerc.Formats.LANG = "en_US.UTF-8";
 
+      # KWin scripts/effects. Karousel is the scrollable tiling script (shortcuts: Meta+A/D to
+      # move focus, Meta+Shift+A/D to move a window, Meta+R to cycle widths, Meta+Space to
+      # toggle floating for the focused window). overrideConfig resets kwinrc, so declare it.
+      kwinrc.Plugins.karouselEnabled = true;
+      kwinrc.Plugins.kwin4_effect_geometry_changeEnabled = true;
+
       # Default terminal for Dolphin / "Open terminal here" etc.
       kdeglobals.General.TerminalApplication = "terminator";
       kdeglobals.General.TerminalService = "terminator.desktop";
