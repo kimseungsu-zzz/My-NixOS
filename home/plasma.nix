@@ -128,9 +128,9 @@
       plasma-localerc.Formats.LANG = "en_US.UTF-8";
 
       # KWin scripts/effects. Krohnkite tiles per monitor (every screen has its own layout).
-      # Meta+Backslash next layout, Meta+T tile, Meta+M monocle, Meta+F toggle floating. overrideConfig
-      # Meta+ next layout, Meta+T tile, Meta+M monocle, Meta+F toggle floating. overrideConfig
-      # resets kwinrc, so the script is declared here.
+      # Shortcuts: Meta+H/J/K/L focus left/down/up/right, Meta+Shift+H/J/K/L move the window,
+      # Meta+Backslash next layout, Meta+T tile, Meta+M monocle, Meta+F toggle floating.
+      # overrideConfig resets kwinrc, so the script is declared here.
       kwinrc.Plugins.krohnkiteEnabled = true;
       # Layout per monitor: three columns on the 3440x1440 ultrawide, master/stack on the laptop.
       kwinrc."Script-krohnkite".screenDefaultLayout = "HDMI-A-1:threecolumn,eDP-1:tile";
