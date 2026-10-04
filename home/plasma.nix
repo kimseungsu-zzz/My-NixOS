@@ -47,6 +47,23 @@ in
       };
     };
 
+    # KakaoTalk (Wine) lets the window shrink below the size its UI needs. KWin keeps
+    # the minimum size for it. Tune the numbers (width,height) if windows are still too
+    # small, or too big for the login window.
+    window-rules = [
+      {
+        description = "KakaoTalk minimum size";
+        match.window-class = {
+          value = "kakaotalk.exe";
+          type = "substring";
+        };
+        apply.minsize = {
+          value = "330,450";
+          apply = "force";
+        };
+      }
+    ];
+
     # Top bar: floating, 58px high, two thirds of the screen
     # width, centred. Widgets are the Plasma defaults.
     panels = [
