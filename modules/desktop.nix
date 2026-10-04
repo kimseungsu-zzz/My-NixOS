@@ -74,7 +74,7 @@
   # on webkitgtk 2.54 (its own WebKit is bundled in the Flatpak runtime).
   services.flatpak = {
     enable = true;
-    packages = [ "io.github.softfever.OrcaSlicer" ];
+    packages = [ "com.orcaslicer.OrcaSlicer" ];
     update.auto = {
       enable = true;
       onCalendar = "weekly";
