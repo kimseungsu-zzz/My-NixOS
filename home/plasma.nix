@@ -127,7 +127,7 @@
       # Karousel tiles every normal window, which breaks Wine apps (Fusion 360, KakaoTalk): their
       # windows get resized/stolen. Wine windows have the .exe name as class, so keep them floating.
       # This replaces the built-in rule list, so the defaults are repeated (with [.] for the dot).
-      "Script-karousel".windowRules = builtins.toJSON [
+      kwinrc."Script-karousel".windowRules = builtins.toJSON [
         { class = ".*[.]exe"; tile = false; }
         { class = "(org[.]kde[.])?plasmashell"; tile = false; }
         { class = "(org[.]kde[.])?polkit-kde-authentication-agent-1"; tile = false; }
