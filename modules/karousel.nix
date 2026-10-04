@@ -37,6 +37,8 @@ let
     '';
   };
 
+  busctl = "${pkgs.systemd}/bin/busctl --user call org.kde.KWin /Scripting org.kde.kwin.Scripting";
+
   kw = "${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file kwinrc --group Plugins --key karouselEnabled";
   kwinReconfigure = "${pkgs.systemd}/bin/busctl --user call org.kde.KWin /KWin org.kde.KWin reconfigure";
 
