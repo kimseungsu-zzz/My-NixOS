@@ -19,6 +19,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # ChatGPT Community (unofficial Linux build of the ChatGPT/Codex desktop app). It keeps its
+    # own nixpkgs pin on purpose: its derivation patches the official Electron payload.
+    codex-desktop-linux.url = "github:ilysenko/codex-desktop-linux";
+
     # Studica Hardware Manager (repackaged .deb: udev rules, dfu-util, dialout).
     # Private repo: fetched over HTTPS with the gh credentials, like hnc.
     studica = {
@@ -51,7 +55,7 @@
     };
   };
 
-  outputs = { nixpkgs, hnc, fusion360, studica, titan-config, kakaotalk, home-manager, plasma-manager, ... }: {
+  outputs = { nixpkgs, hnc, fusion360, codex-desktop-linux, studica, titan-config, kakaotalk, home-manager, plasma-manager, ... }: {
     # nixos-rebuild switch --flake .#linux
     # `nixos` is an alias: nixos-rebuild looks up the *current* hostname.
     nixosConfigurations = rec {
@@ -61,6 +65,7 @@
           ./configuration.nix
           hnc.nixosModules.default
           fusion360.nixosModules.default
+          codex-desktop-linux.nixosModules.default
           studica.nixosModules.default
           titan-config.nixosModules.default
           (import ./modules/kakaotalk.nix kakaotalk)

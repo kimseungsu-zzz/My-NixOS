@@ -39,6 +39,9 @@ in
 {
   programs.firefox.enable = true;
 
+  # ChatGPT Community (menu entry "ChatGPT Community", command codex-desktop). Unfree wrapper.
+  programs.codexDesktopLinux.enable = true;
+
   # Hancom Office (hwp, hword, hcl, hsl). Module: github.com/kimseungsu-zzz/nixos-hnc
   # koreanSupport (default on): ko_KR locale + ibus-hangul + CJK fonts.
   # Runs through XWayland on the Plasma Wayland session (bundled Qt 5.11 has no Wayland plugin).
