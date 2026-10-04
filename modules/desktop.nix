@@ -69,6 +69,17 @@
     '';
   };
 
+  # Flatpak (Flathub). Used for apps whose nixpkgs build breaks on a newer webkitgtk, e.g.
+  # OrcaSlicer: `flatpak install flathub io.github.softfever.OrcaSlicer`.
+  services.flatpak.enable = true;
+  systemd.services.flatpak-repo = {
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
+    path = [ pkgs.flatpak ];
+    script = "flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo";
+  };
+
   # Korean input: install the engine here instead of relying on the hnc module.
   i18n.inputMethod = {
     enable = true;
