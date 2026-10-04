@@ -22,10 +22,10 @@
 
   services.printing.enable = true;
 
-  # Scrollable tiling (niri / PaperWM style) for KWin, plus the animation for windows that a
+  # Per-monitor tiling for KWin (Krohnkite), plus the animation for windows that a
   # script moves or resizes. Enabled in home/plasma.nix (kwinrc Plugins).
   environment.systemPackages = [
-    pkgs.kdePackages.karousel
+    pkgs.kdePackages.krohnkite
     pkgs.kwin-script-geometry-change
   ];
 
