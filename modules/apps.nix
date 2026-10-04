@@ -46,13 +46,18 @@
     nodejs
     python3
     terminator
-    # Run through XWayland: the Wayland Qt backend fails to open the window on this setup.
-    (symlinkJoin {
-      name = "rpi-imager-xcb";
-      paths = [ rpi-imager ];
-      nativeBuildInputs = [ makeWrapper ];
-      postBuild = "wrapProgram $out/bin/rpi-imager --set QT_QPA_PLATFORM xcb";
-    })
+    # 26.05 ships rpi-imager 2.0.9, which crashes at startup (QML "QQmlApplicationEngine failed
+    # to load component": missing Material import, nixpkgs#529793). Fixed upstream after 2.0.9;
+    # drop this override when nixpkgs has >= 2.0.10.
+    (rpi-imager.overrideAttrs (old: {
+      patches = (old.patches or [ ]) ++ [
+        (fetchpatch {
+          name = "add-material-import.patch";
+          url = "https://github.com/raspberrypi/rpi-imager/commit/a4a2d3f402c20daf76a15d18acb22f6be6810b35.patch";
+          hash = "sha256-n0AwancP8oY/sUUQtmuznfgeYkf+eXrHC1uzx41OclE=";
+        })
+      ];
+    }))
     ventoy-full-gtk  # bootable USB creator (run with sudo or via polkit)
   ];
 }
