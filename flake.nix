@@ -23,6 +23,9 @@
     # own nixpkgs pin on purpose: its derivation patches the official Electron payload.
     codex-desktop-linux.url = "github:ilysenko/codex-desktop-linux";
 
+    # Claude Desktop (official Linux beta from Anthropic's apt repo, packaged for Nix).
+    claude-desktop.url = "github:poeck/claude-desktop-nix-flake";
+
     # Studica Hardware Manager (repackaged .deb: udev rules, dfu-util, dialout).
     # Private repo: fetched over HTTPS with the gh credentials, like hnc.
     studica = {
@@ -55,7 +58,7 @@
     };
   };
 
-  outputs = { nixpkgs, hnc, fusion360, codex-desktop-linux, studica, titan-config, kakaotalk, home-manager, plasma-manager, ... }: {
+  outputs = { nixpkgs, hnc, fusion360, codex-desktop-linux, claude-desktop, studica, titan-config, kakaotalk, home-manager, plasma-manager, ... }: {
     # nixos-rebuild switch --flake .#linux
     # `nixos` is an alias: nixos-rebuild looks up the *current* hostname.
     nixosConfigurations = rec {
@@ -66,6 +69,7 @@
           hnc.nixosModules.default
           fusion360.nixosModules.default
           codex-desktop-linux.nixosModules.default
+          claude-desktop.nixosModules.default
           studica.nixosModules.default
           titan-config.nixosModules.default
           (import ./modules/kakaotalk.nix kakaotalk)
