@@ -80,6 +80,11 @@
     ibus.waylandFrontend = true;
   };
 
+  # Chromium/Electron apps (Brave, VS Code, Claude, ChatGPT, Spotify, ...) run through XWayland
+  # by default, where they get no input method. This makes them use native Wayland, which
+  # includes the text-input protocol (--enable-wayland-ime) that KWin forwards to IBus.
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
   # Needed for home-manager dconf.settings (ibus-hangul keys).
   programs.dconf.enable = true;
 
