@@ -11,8 +11,14 @@ let
     postBuild = ''
       real="$(readlink -f $out/bin/orca-slicer)"
       rm $out/bin/orca-slicer
-      grep -v WEBKIT_DISABLE_COMPOSITING_MODE "$real" > $out/bin/orca-slicer
-      chmod +x $out/bin/orca-slicer
+      cp "$real" $out/bin/orca-slicer
+      chmod u+w,+x $out/bin/orca-slicer
+      # The wrapper is a compiled binary (makeBinaryWrapper), so editing a line is not possible:
+      # rename the variable in place (same length) so it sets an unused name instead.
+      LC_ALL=C sed -i 's/WEBKIT_DISABLE_COMPOSITING_MODE/WEBKIT_DISABLE_COMPOSITING_MODX/g' $out/bin/orca-slicer
+      if LC_ALL=C grep -q WEBKIT_DISABLE_COMPOSITING_MODE $out/bin/orca-slicer; then
+        echo "orca-slicer wrapper still sets WEBKIT_DISABLE_COMPOSITING_MODE" >&2; exit 1
+      fi
     '';
   };
 in
