@@ -71,7 +71,7 @@
       command = "terminator";
     };
 
-    # Top bar: floating, 58px high, filling the width of each screen (so it adapts to
+    # Top bar: floating, auto-hides (slides in when the pointer hits the top edge), 58px high, filling the width of each screen (so it adapts to
     # whatever monitor it is on). Widgets are the Plasma defaults.
     panels = [
       {
@@ -82,6 +82,8 @@
         height = 58;
         alignment = "center";
         lengthMode = "fill";
+        # Hidden until the pointer touches the top edge.
+        hiding = "autohide";
       }
     ];
 
