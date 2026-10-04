@@ -13,7 +13,7 @@
   # failed in pipe A" in dmesg) and causes black flicker when only part of the screen
   # updates (e.g. rotating a 3D view). Panel Self Refresh off fixes it.
   # quiet/splash/loglevel: no kernel or initrd text between the boot menu and the desktop.
-  boot.kernelParams = [ "i915.enable_psr=0" "consoleblank=0" "quiet" "splash" "loglevel=3" "udev.log_level=3" "rd.systemd.show_status=false" ];
+  boot.kernelParams = [ "i915.force_probe=!5694" "xe.force_probe=5694" "consoleblank=0" "quiet" "splash" "loglevel=3" "udev.log_level=3" "rd.systemd.show_status=false" ];
   boot.consoleLogLevel = 0;
   boot.initrd.verbose = false;
 
