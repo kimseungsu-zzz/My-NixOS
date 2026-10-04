@@ -26,6 +26,10 @@
     enable32Bit = true;
   };
 
+  # Terminal: Terminator instead of Konsole (colours in home.nix, default terminal and the
+  # Ctrl+Alt+T shortcut in home/plasma.nix).
+  environment.plasma6.excludePackages = [ pkgs.kdePackages.konsole ];
+
   # CLI tools and anything the system itself needs. GUI apps live in
   # home/packages.nix.
   environment.systemPackages = with pkgs; [
@@ -36,5 +40,6 @@
     distrobox
     nodejs
     python3
+    terminator
   ];
 }

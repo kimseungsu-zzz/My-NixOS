@@ -20,4 +20,41 @@
   dconf.settings."desktop/ibus/engine/hangul" = {
     switch-keys = "Hangul,Shift+space";
   };
+  # Terminator with the Catppuccin Mocha palette. The file is a read-only symlink into the
+  # store, so changes made in Terminator's preferences window are not saved; edit it here.
+  xdg.configFile."terminator/config" = {
+    force = true;
+    text = ''
+      [global_config]
+        title_transmit_fg_color = "#cdd6f4"
+        title_transmit_bg_color = "#313244"
+        title_inactive_fg_color = "#a6adc8"
+        title_inactive_bg_color = "#181825"
+        title_receive_fg_color = "#1e1e2e"
+        title_receive_bg_color = "#cba6f7"
+        suppress_multiple_term_dialog = True
+      [keybindings]
+      [profiles]
+        [[default]]
+          use_system_font = False
+          font = JetBrainsMono Nerd Font 11
+          background_color = "#1e1e2e"
+          foreground_color = "#cdd6f4"
+          cursor_color = "#f5e0dc"
+          palette = "#45475a:#f38ba8:#a6e3a1:#f9e2af:#89b4fa:#f5c2e7:#94e2d5:#bac2de:#585b70:#f38ba8:#a6e3a1:#f9e2af:#89b4fa:#f5c2e7:#94e2d5:#a6adc8"
+          scrollback_infinite = True
+          scrollbar_position = hidden
+          show_titlebar = False
+      [layouts]
+        [[default]]
+          [[[window0]]]
+            type = Window
+            parent = ""
+          [[[terminal1]]]
+            type = Terminal
+            parent = window0
+            profile = default
+      [plugins]
+    '';
+  };
 }

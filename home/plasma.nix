@@ -69,6 +69,13 @@ in
       };
     };
 
+    # Ctrl+Alt+T (the built-in shortcut belonged to Konsole).
+    hotkeys.commands."launch-terminator" = {
+      name = "Launch Terminator";
+      key = "Ctrl+Alt+T";
+      command = "terminator";
+    };
+
     # Top bar: floating, 58px high, two thirds of the screen
     # width, centred. Widgets are the Plasma defaults.
     panels = [
@@ -99,6 +106,10 @@ in
       kdeglobals.KDE.AnimationDurationFactor = 1.414213562373095;
       kwinrc.Xwayland.Scale = 1;
       plasma-localerc.Formats.LANG = "en_US.UTF-8";
+
+      # Default terminal for Dolphin / "Open terminal here" etc.
+      kdeglobals.General.TerminalApplication = "terminator";
+      kdeglobals.General.TerminalService = "terminator.desktop";
 
       # Korean keyboard. Plasma on Wayland reads the layout from kxkbrc (the NixOS
       # xkb options only reach SDDM/X11). Right Alt = Hangul, Right Ctrl = Hanja
