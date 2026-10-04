@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 
 {
   imports = [
@@ -14,6 +14,15 @@
     preload-engines = [ "hangul" ];
     engines-order = [ "hangul" ];
   };
+
+  # KDE caches the KWin script / service lookups under ~/.cache. The Nix profile directories have a constant
+  # modification time, so those caches are never invalidated and KWin kept running an old Karousel after the
+  # script had been rebuilt. Clear them on every activation (they are rebuilt automatically).
+  home.activation.clearKdeCaches = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    rm -f "$HOME"/.cache/ksycoca6_*
+    rm -rf "$HOME/.cache/kwin" "$HOME/.cache/qmlcache"
+    ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental >/dev/null 2>&1 || true
+  '';
 
   # IBus' default trigger is Super+Space (switch input method). There is only one engine, so it is
   # not needed, and it swallows Meta+Space before it reaches Karousel's "toggle floating".
