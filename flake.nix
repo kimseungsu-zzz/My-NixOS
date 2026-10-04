@@ -26,6 +26,12 @@
     # Claude Desktop (official Linux beta from Anthropic's apt repo, packaged for Nix).
     claude-desktop.url = "github:poeck/claude-desktop-nix-flake";
 
+    # Karousel fork with multi-monitor support (private repo, plain source; built in modules/karousel.nix).
+    karousel-multimonitor = {
+      url = "git+https://github.com/kimseungsu-zzz/karousel-multimonitor";
+      flake = false;
+    };
+
     # Studica Hardware Manager (repackaged .deb: udev rules, dfu-util, dialout).
     # Private repo: fetched over HTTPS with the gh credentials, like hnc.
     studica = {
@@ -58,7 +64,7 @@
     };
   };
 
-  outputs = { nixpkgs, hnc, fusion360, codex-desktop-linux, claude-desktop, studica, titan-config, kakaotalk, home-manager, plasma-manager, ... }: {
+  outputs = { nixpkgs, hnc, fusion360, codex-desktop-linux, claude-desktop, karousel-multimonitor, studica, titan-config, kakaotalk, home-manager, plasma-manager, ... }: {
     # nixos-rebuild switch --flake .#linux
     # `nixos` is an alias: nixos-rebuild looks up the *current* hostname.
     nixosConfigurations = rec {
@@ -70,6 +76,7 @@
           fusion360.nixosModules.default
           codex-desktop-linux.nixosModules.default
           claude-desktop.nixosModules.default
+          { _module.args.karouselMultimonitor = karousel-multimonitor; }
           studica.nixosModules.default
           titan-config.nixosModules.default
           (import ./modules/kakaotalk.nix kakaotalk)
