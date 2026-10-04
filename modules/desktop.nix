@@ -69,15 +69,16 @@
     '';
   };
 
-  # Flatpak (Flathub). Used for apps whose nixpkgs build breaks on a newer webkitgtk, e.g.
-  # OrcaSlicer: `flatpak install flathub io.github.softfever.OrcaSlicer`.
-  services.flatpak.enable = true;
-  systemd.services.flatpak-repo = {
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
-    path = [ pkgs.flatpak ];
-    script = "flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo";
+  # Flatpak, managed declaratively by nix-flatpak (flake input): Flathub is added and the apps below
+  # are installed on activation. OrcaSlicer comes from Flatpak because the nixpkgs build crashes
+  # on webkitgtk 2.54 (its own WebKit is bundled in the Flatpak runtime).
+  services.flatpak = {
+    enable = true;
+    packages = [ "io.github.softfever.OrcaSlicer" ];
+    update.auto = {
+      enable = true;
+      onCalendar = "weekly";
+    };
   };
 
   # Korean input: install the engine here instead of relying on the hnc module.
