@@ -22,9 +22,31 @@ in
     # table was all defaults, and the Kate/Dolphin entries were session state.
     # Dark theme. kdeglobals is reset by overrideConfig, so the theme has to be
     # declared. The title bar colours captured earlier (39,44,49) are Breeze Dark.
+    # Catppuccin Mocha (Mauve). The packages come from modules/theme.nix.
     workspace = {
-      lookAndFeel = "org.kde.breezedark.desktop";
-      colorScheme = "BreezeDark";
+      lookAndFeel = "Catppuccin-Mocha-Mauve";
+      colorScheme = "CatppuccinMochaMauve";
+      iconTheme = "Papirus-Dark";
+      cursor = {
+        theme = "catppuccin-mocha-mauve-cursors";
+        size = 24;
+      };
+      windowDecorations = {
+        library = "org.kde.kwin.aurorae";
+        theme = "__aurorae__svg__CatppuccinMocha-Modern";
+      };
+      # Catppuccin Mocha "base" (#1e1e2e).
+      wallpaperPlainColor = "30,30,46";
+    };
+
+    # Fonts: Pretendard (Korean + Latin) for the UI, JetBrains Mono Nerd Font for monospace.
+    fonts = {
+      general = { family = "Pretendard"; pointSize = 10; };
+      menu = { family = "Pretendard"; pointSize = 10; };
+      toolbar = { family = "Pretendard"; pointSize = 10; };
+      small = { family = "Pretendard"; pointSize = 8; };
+      windowTitle = { family = "Pretendard"; pointSize = 10; };
+      fixedWidth = { family = "JetBrainsMono Nerd Font"; pointSize = 10; };
     };
 
     # Never dim, turn off the display or suspend (on AC and battery). overrideConfig resets
