@@ -22,6 +22,14 @@
 
   services.printing.enable = true;
 
+  # Bluetooth. The Plasma 6 session brings the BlueDevil tray applet/settings page.
+  # linux-firmware is needed for the controller (Intel Bluetooth loads firmware from it).
+  hardware.enableRedistributableFirmware = true;
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
+
   # Korean input: install the engine here instead of relying on the hnc module.
   i18n.inputMethod = {
     enable = true;
