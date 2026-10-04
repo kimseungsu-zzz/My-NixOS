@@ -15,9 +15,9 @@
   # quiet/splash/loglevel: no kernel or initrd text between the boot menu and the desktop.
   boot.kernelParams = [ "i915.enable_psr=0" "consoleblank=0" "quiet" "splash" "loglevel=3" "udev.log_level=3" "rd.systemd.show_status=false"
     # The ultrawide on HDMI-A-1 only advertises 3440x1440@50 in its EDID (it ran 110 Hz on
-    # Windows). The kernel CVT-RB mode at 110 Hz needs 600.7 MHz, just over the 600 MHz HDMI 2.0
-    # TMDS limit ("User-defined mode not supported" in dmesg), so ask for 109 Hz (~592 MHz).
-    "video=HDMI-A-1:3440x1440MR@109"
+    # Windows). i915 rejects HDMI modes above 594 MHz: CVT-RB at 110 Hz is 600.7 MHz and at 109 Hz
+    # 594.9 MHz ("User-defined mode not supported" in dmesg), so ask for 108 Hz (~590 MHz).
+    "video=HDMI-A-1:3440x1440MR@108"
   ];
   boot.consoleLogLevel = 0;
   boot.initrd.verbose = false;
