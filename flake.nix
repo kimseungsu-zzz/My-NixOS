@@ -13,12 +13,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Autodesk Fusion 360 (FHS + Wine + cryinkfly installer). Untested draft.
-    fusion360 = {
-      url = "github:kimseungsu-zzz/fusion360-nixos";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # ChatGPT Community (unofficial Linux build of the ChatGPT/Codex desktop app). It keeps its
     # own nixpkgs pin on purpose: its derivation patches the official Electron payload.
     codex-desktop-linux.url = "github:ilysenko/codex-desktop-linux";
@@ -26,30 +20,17 @@
     # Claude Desktop (official Linux beta from Anthropic's apt repo, packaged for Nix).
     claude-desktop.url = "github:poeck/claude-desktop-nix-flake";
 
+    # Private monorepo: Fusion 360, Studica Hardware Manager, Titan Config, KakaoTalk (packages + NixOS
+    # modules). Fetched over HTTPS with the gh credentials, like hnc.
+    nix-packages = {
+      url = "git+https://github.com/kimseungsu-zzz/nix-packages";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Karousel fork with multi-monitor support (private repo, plain source; built in modules/karousel.nix).
     karousel-multimonitor = {
       url = "git+https://github.com/kimseungsu-zzz/karousel-multimonitor";
       flake = false;
-    };
-
-    # Studica Hardware Manager (repackaged .deb: udev rules, dfu-util, dialout).
-    # Private repo: fetched over HTTPS with the gh credentials, like hnc.
-    studica = {
-      url = "git+https://github.com/kimseungsu-zzz/nixos-SHM";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Studica Titan Config & Update App (Qt port). The flake lives in the titan-config/
-    # subdirectory of this private repo; fetched over HTTPS like hnc.
-    titan-config = {
-      url = "git+https://github.com/kimseungsu-zzz/nixos-SCP?dir=titan-config";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # KakaoTalk on Wine (dev-environment flake; wrapped in modules/kakaotalk.nix).
-    kakaotalk = {
-      url = "git+https://github.com/kimseungsu-zzz/nixos-kakaotalk";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # KDE Plasma settings as code (home.nix, programs.plasma).
@@ -64,7 +45,7 @@
     };
   };
 
-  outputs = { nixpkgs, hnc, fusion360, codex-desktop-linux, claude-desktop, karousel-multimonitor, studica, titan-config, kakaotalk, home-manager, plasma-manager, ... }: {
+  outputs = { nixpkgs, hnc, nix-packages, codex-desktop-linux, claude-desktop, karousel-multimonitor, home-manager, plasma-manager, ... }: {
     # nixos-rebuild switch --flake .#linux
     # `nixos` is an alias: nixos-rebuild looks up the *current* hostname.
     nixosConfigurations = rec {
@@ -73,13 +54,13 @@
         modules = [
           ./configuration.nix
           hnc.nixosModules.default
-          fusion360.nixosModules.default
           codex-desktop-linux.nixosModules.default
           claude-desktop.nixosModules.default
           { _module.args.karouselMultimonitor = karousel-multimonitor; }
-          studica.nixosModules.default
-          titan-config.nixosModules.default
-          (import ./modules/kakaotalk.nix kakaotalk)
+          nix-packages.nixosModules.fusion360
+          nix-packages.nixosModules.studica-hardware-manager
+          nix-packages.nixosModules.titan-config
+          nix-packages.nixosModules.kakaotalk
           { nix.settings.experimental-features = [ "nix-command" "flakes" ]; }
           home-manager.nixosModules.home-manager
           {
