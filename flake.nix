@@ -5,13 +5,10 @@
     # Matches system.stateVersion in configuration.nix.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
-    # Hancom Office (private repo): fetched over HTTPS with the git credentials
+    # Hancom Office 2020 (private repo): fetched over HTTPS with the git credentials
     # from `gh auth login` (port 22 is blocked on this network). Update with
-    # `nix flake update hnc`.
-    hnc = {
-      url = "git+https://github.com/kimseungsu-zzz/nixos-hnc";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # `nix flake update hnc2020`. It brings its own nixpkgs pins (the app needs 19.09 libraries).
+    hnc2020.url = "git+https://github.com/kimseungsu-zzz/nixos-HNC2020";
 
     # ChatGPT Community (unofficial Linux build of the ChatGPT/Codex desktop app). It keeps its
     # own nixpkgs pin on purpose: its derivation patches the official Electron payload.
@@ -21,7 +18,7 @@
     claude-desktop.url = "github:poeck/claude-desktop-nix-flake";
 
     # Private monorepo: Fusion 360, Studica Hardware Manager, Titan Config, KakaoTalk, Karousel (packages + NixOS
-    # modules). Fetched over HTTPS with the gh credentials, like hnc.
+    # modules). Fetched over HTTPS with the gh credentials, like hnc2020.
     nix-packages = {
       url = "git+https://github.com/kimseungsu-zzz/nix-packages";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -39,7 +36,7 @@
     };
   };
 
-  outputs = { nixpkgs, hnc, nix-packages, codex-desktop-linux, claude-desktop, home-manager, plasma-manager, ... }: {
+  outputs = { nixpkgs, hnc2020, nix-packages, codex-desktop-linux, claude-desktop, home-manager, plasma-manager, ... }: {
     # nixos-rebuild switch --flake .#linux
     # `nixos` is an alias: nixos-rebuild looks up the *current* hostname.
     nixosConfigurations = rec {
@@ -47,7 +44,7 @@
         system = "x86_64-linux";
         modules = [
           ./configuration.nix
-          hnc.nixosModules.default
+          hnc2020.nixosModules.default
           codex-desktop-linux.nixosModules.default
           claude-desktop.nixosModules.default
           nix-packages.nixosModules.fusion360

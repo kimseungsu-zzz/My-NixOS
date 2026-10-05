@@ -45,10 +45,8 @@ in
   # Claude Desktop (official Linux beta, unfree).
   programs.claude-desktop.enable = true;
 
-  # Hancom Office (hwp, hword, hcl, hsl). Module: github.com/kimseungsu-zzz/nixos-hnc
-  # koreanSupport (default on): ko_KR locale + ibus-hangul + CJK fonts.
-  # Runs through XWayland on the Plasma Wayland session (bundled Qt 5.11 has no Wayland plugin).
-  programs.hoffice11.enable = true;
+  # OBS Studio (screen recording / streaming), with the virtual camera module.
+  programs.obs-studio.enable = true;
 
   # Studica Hardware Manager. users get added to the dialout group (re-login needed).
   programs.studica-hardware-manager = {

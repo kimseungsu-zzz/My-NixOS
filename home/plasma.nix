@@ -183,7 +183,7 @@
         ResetOldOptions = true;
       };
 
-      # IBus input method on the Wayland session (ibus-hangul comes from the hnc module).
+      # IBus input method on the Wayland session (ibus-hangul comes from modules/desktop.nix).
       kwinrc.Wayland.InputMethod = "/run/current-system/sw/share/applications/org.freedesktop.IBus.Panel.Wayland.Gtk3.desktop";
     };
 
