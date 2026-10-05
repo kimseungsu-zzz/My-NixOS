@@ -55,6 +55,7 @@
           nix-packages.nixosModules.titan-config
           nix-packages.nixosModules.kakaotalk
           nix-packages.nixosModules.karousel
+          nix-packages.nixosModules.legacylauncher
           { nix.settings.experimental-features = [ "nix-command" "flakes" ]; }
           home-manager.nixosModules.home-manager
           {
