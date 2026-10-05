@@ -88,5 +88,6 @@ in
     terminator
     rpiImager   # Raspberry Pi Imager, always as root
     ventoy-full-gtk  # bootable USB creator (run with sudo or via polkit)
+    bambu-studio
   ];
 }
