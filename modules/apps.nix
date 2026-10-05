@@ -80,6 +80,7 @@ in
   environment.systemPackages = with pkgs; [
     wget
     git
+    git-lfs  # Nix needs it to fetch the Hancom input (stored with Git LFS)
     gh
     btop
     distrobox

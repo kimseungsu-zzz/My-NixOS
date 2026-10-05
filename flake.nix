@@ -5,6 +5,11 @@
     # Matches system.stateVersion in configuration.nix.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
+    # Hancom Office 2020 (private repo). The extracted program is stored in the repo with Git LFS, so the
+    # input is fetched with lfs=1 (needs git-lfs and the `gh auth login` credentials, like the other
+    # private inputs). It brings its own nixpkgs pins (the app needs 19.09 libraries).
+    hnc2020.url = "git+https://github.com/kimseungsu-zzz/nixos-HNC2020?lfs=1";
+
     # ChatGPT Community (unofficial Linux build of the ChatGPT/Codex desktop app). It keeps its
     # own nixpkgs pin on purpose: its derivation patches the official Electron payload.
     codex-desktop-linux.url = "github:ilysenko/codex-desktop-linux";
@@ -31,7 +36,7 @@
     };
   };
 
-  outputs = { nixpkgs, nix-packages, codex-desktop-linux, claude-desktop, home-manager, plasma-manager, ... }: {
+  outputs = { nixpkgs, hnc2020, nix-packages, codex-desktop-linux, claude-desktop, home-manager, plasma-manager, ... }: {
     # nixos-rebuild switch --flake .#linux
     # `nixos` is an alias: nixos-rebuild looks up the *current* hostname.
     nixosConfigurations = rec {
@@ -41,6 +46,7 @@
           ./configuration.nix
           codex-desktop-linux.nixosModules.default
           claude-desktop.nixosModules.default
+          hnc2020.nixosModules.default
           nix-packages.nixosModules.fusion360
           nix-packages.nixosModules.studica-hardware-manager
           nix-packages.nixosModules.titan-config
