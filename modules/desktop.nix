@@ -22,8 +22,12 @@
 
   services.printing.enable = true;
 
-  # Scrollable tiling (niri / PaperWM style, multi-monitor fork, source in the nix-packages repo) comes
-  # from the karousel module there and is enabled in home/plasma.nix (kwinrc Plugins).
+  # Scrollable tiling (niri / PaperWM style, multi-monitor fork, source in the nix-packages repo) for KWin, plus
+  # the animation for windows that a
+  # script moves or resizes. Enabled in home/plasma.nix (kwinrc Plugins).
+  environment.systemPackages = [
+    pkgs.kwin-script-geometry-change
+  ];
 
   # Bluetooth. The Plasma 6 session brings the BlueDevil tray applet/settings page.
   # linux-firmware is needed for the controller (Intel Bluetooth loads firmware from it).
