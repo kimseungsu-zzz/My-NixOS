@@ -165,7 +165,10 @@
         { class = "jetbrains-.*"; caption = "splash"; tile = false; }
         { class = "jetbrains-.*"; caption = "Unstash Changes|Paths Affected by stash@.*"; tile = true; }
       ];
-      kwinrc.Plugins.kwin4_effect_geometry_changeEnabled = true;
+      # No kwin4_effect_geometry_change: it animates every window a script moves, which made opening a
+      # window drop frames. Tiled windows now jump straight to their new place. To get the animation
+      # back, set kwinrc.Plugins.kwin4_effect_geometry_changeEnabled = true and re-add
+      # pkgs.kwin-script-geometry-change in modules/desktop.nix.
 
       # Default terminal for Dolphin / "Open terminal here" etc.
       kdeglobals.General.TerminalApplication = "terminator";
