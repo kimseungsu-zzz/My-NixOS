@@ -5,10 +5,10 @@
     # Matches system.stateVersion in configuration.nix.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
-    # Hancom Office 2020 (private repo). The extracted program is stored in the repo with Git LFS, so the
-    # input is fetched with lfs=1 (needs git-lfs and the `gh auth login` credentials, like the other
-    # private inputs). It brings its own nixpkgs pins (the app needs 19.09 libraries).
-    hnc2020.url = "git+https://github.com/kimseungsu-zzz/nixos-HNC2020.git?lfs=1";
+    # Hancom Office 2020 (private repo, fetched with the `gh auth login` credentials like the other
+    # private inputs). Only the package definition lives there; the installer is downloaded by the
+    # build from a pinned URL. It brings its own nixpkgs pins (the app needs 19.09 libraries).
+    hnc2020.url = "git+https://github.com/kimseungsu-zzz/nixos-HNC2020";
 
     # ChatGPT Community (unofficial Linux build of the ChatGPT/Codex desktop app). It keeps its
     # own nixpkgs pin on purpose: its derivation patches the official Electron payload.
