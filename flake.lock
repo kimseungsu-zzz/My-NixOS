@@ -74,6 +74,28 @@
         "url": "https://github.com/kimseungsu-zzz/nixos-HNC2020"
       }
     },
+    "hnc2020_2": {
+      "inputs": {
+        "nixpkgs": [
+          "nix-packages",
+          "nixpkgs"
+        ],
+        "nixpkgs-legacy": "nixpkgs-legacy_2"
+      },
+      "locked": {
+        "lastModified": 1791191425,
+        "narHash": "sha256-vkp6YtOUF2Sm1/u1mcJgKNJ38IyAdiy3GgSCqPh6bgs=",
+        "ref": "refs/heads/main",
+        "rev": "3e8a27e213cb2aba0e330a06df36a7f684466ef7",
+        "revCount": 7,
+        "type": "git",
+        "url": "https://github.com/kimseungsu-zzz/nixos-HNC2020"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://github.com/kimseungsu-zzz/nixos-HNC2020"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -131,6 +153,7 @@
     },
     "nix-packages": {
       "inputs": {
+        "hnc2020": "hnc2020_2",
         "legacylauncher-src": "legacylauncher-src",
         "legacylauncher-translations": "legacylauncher-translations",
         "nixpkgs": [
@@ -138,11 +161,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791174576,
-        "narHash": "sha256-4kVVu/BucwM3q/4B94ogT2FazvXNGEyLie0RVSmLIuk=",
+        "lastModified": 1791191839,
+        "narHash": "sha256-NE/gkUfZr7Ds+qg7qsymJk5HUZ0cplsO8Hdn/b76zRg=",
         "ref": "refs/heads/main",
-        "rev": "3af49fe60cad79bc8cc5b74bec4109b2c570d496",
-        "revCount": 35,
+        "rev": "15682a1ab2be984a7e4784e656cdd08bf0df3ecd",
+        "revCount": 37,
         "type": "git",
         "url": "https://github.com/kimseungsu-zzz/nix-packages"
       },
@@ -168,6 +191,23 @@
       }
     },
     "nixpkgs-legacy": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1600952148,
+        "narHash": "sha256-GUKHrnng33luc6mUT3rDnZ3Hm+4MMEJpEchRIAQx7JQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "75f4ba05c63be3f147bcc2f7bd4ba1f029cedcb1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-19.09",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-legacy_2": {
       "flake": false,
       "locked": {
         "lastModified": 1600952148,
