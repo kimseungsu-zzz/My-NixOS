@@ -30,10 +30,14 @@
         library = "org.kde.breeze";
         theme = "Breeze";
       };
-      # No splash screen: the plain base colour below shows straight away.
+      # No splash screen: the blurred KDE Flow wallpaper appears immediately.
       splashScreen.theme = "None";
-      # Catppuccin Mocha "base" (#1e1e2e).
-      wallpaperPlainColor = "30,30,46";
+      wallpaper = ../assets/wallpapers/flow-dark-dashboard-blur.png;
+      wallpaperPlainColor = null;
+      wallpaperFillMode = "preserveAspectCrop";
+      wallpaperBackground = {
+        blur = true;
+      };
     };
 
     # Fonts: Pretendard (Korean + Latin) for the UI, JetBrains Mono Nerd Font for monospace.
