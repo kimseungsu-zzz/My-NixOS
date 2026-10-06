@@ -21,7 +21,9 @@
   home.activation.clearKdeCaches = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     rm -f "$HOME"/.cache/ksycoca6_*
     rm -rf "$HOME/.cache/kwin" "$HOME/.cache/qmlcache"
+    ${pkgs.desktop-file-utils}/bin/update-desktop-database "$HOME/.nix-profile/share/applications" >/dev/null 2>&1 || true
     ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental >/dev/null 2>&1 || true
+    ${pkgs.vicinae}/bin/vicinae server --replace >/dev/null 2>&1 &
   '';
 
   # IBus' default trigger is Super+Space (switch input method). There is only one engine, so it is
