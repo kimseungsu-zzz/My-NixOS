@@ -36,50 +36,11 @@ let
 
     spawn-at-startup "noctalia"
 
-    // Persist the display layout currently active in this Niri session.
-    output "HDMI-A-1" {
-        mode "3440x1440@100"
-        scale 1.0
-        transform "normal"
-        position x=2680 y=-1440
-    }
-
-    output "eDP-1" {
-        mode "1920x1080@59.997"
-        scale 1.0
-        transform "normal"
-        position x=3440 y=0
-    }
-
-    window-rule {
-        geometry-corner-radius 16
-        clip-to-geometry true
-    }
-
     window-rule {
         match app-id="dev.noctalia.Noctalia"
         open-floating true
         default-column-width { fixed 1080; }
         default-window-height { fixed 900; }
-    }
-
-    // Keep every KakaoTalk window floating so it can be moved freely.
-    window-rule {
-        match app-id=r"^kakaotalk\.exe$"
-        open-floating true
-        open-fullscreen false
-        open-maximized-to-edges false
-    }
-
-    // Give conversation windows a sensible initial size without locking resizing.
-    window-rule {
-        match app-id=r"^kakaotalk\.exe$"
-        exclude title="^카카오톡$"
-        open-floating true
-        open-fullscreen false
-        open-maximized-to-edges false
-        default-column-width { fixed 900; }
-        default-window-height { fixed 700; }
     }
 
     window-rule {
@@ -191,14 +152,6 @@ let
         Mod+Alt+Right { focus-monitor-right; }
         Mod+Shift+Alt+Left { move-column-to-monitor-left; }
         Mod+Shift+Alt+Right { move-column-to-monitor-right; }
-
-        // Floating windows belong to one monitor's workspace. Move the whole
-        // focused window to another monitor explicitly instead of dragging it
-        // past the edge, where it can appear to disappear.
-        Mod+Ctrl+Shift+Left { move-window-to-monitor-left; focus-monitor-left; }
-        Mod+Ctrl+Shift+Right { move-window-to-monitor-right; focus-monitor-right; }
-        Mod+Ctrl+Shift+Up { move-window-to-monitor-up; focus-monitor-up; }
-        Mod+Ctrl+Shift+Down { move-window-to-monitor-down; focus-monitor-down; }
 
         XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "noctalia msg volume-up"; }
         XF86AudioLowerVolume allow-when-locked=true { spawn-sh "noctalia msg volume-down"; }

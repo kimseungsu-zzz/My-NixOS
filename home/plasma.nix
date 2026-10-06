@@ -153,7 +153,6 @@
       # This replaces the built-in rule list, so the defaults are repeated (with [.] for the dot).
       kwinrc."Script-karousel".windowRules = builtins.toJSON [
         { class = ".*[.]exe"; tile = false; }
-        { class = "spotify"; tile = false; }
         { class = "(org[.]kde[.])?plasmashell"; tile = false; }
         { class = "(org[.]kde[.])?polkit-kde-authentication-agent-1"; tile = false; }
         { class = "(org[.]kde[.])?kded6"; tile = false; }
