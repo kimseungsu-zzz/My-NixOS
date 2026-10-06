@@ -1,6 +1,12 @@
 {
   description = "linux NixOS system";
 
+  # Official Noctalia cache; avoids compiling its Qt shell locally.
+  nixConfig = {
+    extra-substituters = [ "https://noctalia.cachix.org" ];
+    extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
+  };
+
   inputs = {
     # Matches system.stateVersion in configuration.nix.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
@@ -24,26 +30,24 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    # Private monorepo: Fusion 360, Studica Hardware Manager, Titan Config, KakaoTalk, Karousel (packages + NixOS
+    # Complete desktop shell for the Niri session (bar, launcher, notifications, controls).
+    noctalia.url = "github:noctalia-dev/noctalia/cachix";
+
+    # Private monorepo: Studica Hardware Manager, Titan Config, KakaoTalk, Karousel (packages + NixOS
     # modules). Fetched over HTTPS with the gh credentials, like the other private inputs.
     nix-packages = {
       url = "git+https://github.com/kimseungsu-zzz/nix-packages";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # KDE Plasma settings as code (home.nix, programs.plasma).
+    # Home Manager desktop and application configuration.
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    plasma-manager = {
-      url = "github:nix-community/plasma-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
-    };
   };
 
-  outputs = { nixpkgs, hnc2020, nix-packages, codex-desktop-linux, claude-desktop, zen-browser, home-manager, plasma-manager, ... }: {
+  outputs = { nixpkgs, hnc2020, nix-packages, codex-desktop-linux, claude-desktop, zen-browser, noctalia, home-manager, ... }: {
     # nixos-rebuild switch --flake .#linux
     # `nixos` is an alias: nixos-rebuild looks up the *current* hostname.
     nixosConfigurations = rec {
@@ -54,7 +58,6 @@
           codex-desktop-linux.nixosModules.default
           claude-desktop.nixosModules.default
           hnc2020.nixosModules.default
-          nix-packages.nixosModules.fusion360
           nix-packages.nixosModules.studica-hardware-manager
           nix-packages.nixosModules.titan-config
           nix-packages.nixosModules.kakaotalk
@@ -67,12 +70,14 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              extraSpecialArgs = { inherit nix-packages; };
               # An existing plasma config file is moved aside instead of
               # aborting the first activation.
               backupFileExtension = "hm-backup";
               sharedModules = [
-                plasma-manager.homeModules.plasma-manager
+                ./home/fusion360.nix
                 zen-browser.homeModules.beta
+                noctalia.homeModules.default
               ];
               users.linux = import ./home.nix;
             };
