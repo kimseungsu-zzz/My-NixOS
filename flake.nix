@@ -17,6 +17,13 @@
     # Claude Desktop (official Linux beta from Anthropic's apt repo, packaged for Nix).
     claude-desktop.url = "github:poeck/claude-desktop-nix-flake";
 
+    # Zen Browser, packaged for Nix with a Home Manager module.
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     # Private monorepo: Fusion 360, Studica Hardware Manager, Titan Config, KakaoTalk, Karousel (packages + NixOS
     # modules). Fetched over HTTPS with the gh credentials, like the other private inputs.
     nix-packages = {
@@ -36,7 +43,7 @@
     };
   };
 
-  outputs = { nixpkgs, hnc2020, nix-packages, codex-desktop-linux, claude-desktop, home-manager, plasma-manager, ... }: {
+  outputs = { nixpkgs, hnc2020, nix-packages, codex-desktop-linux, claude-desktop, zen-browser, home-manager, plasma-manager, ... }: {
     # nixos-rebuild switch --flake .#linux
     # `nixos` is an alias: nixos-rebuild looks up the *current* hostname.
     nixosConfigurations = rec {
@@ -63,7 +70,10 @@
               # An existing plasma config file is moved aside instead of
               # aborting the first activation.
               backupFileExtension = "hm-backup";
-              sharedModules = [ plasma-manager.homeModules.plasma-manager ];
+              sharedModules = [
+                plasma-manager.homeModules.plasma-manager
+                zen-browser.homeModules.beta
+              ];
               users.linux = import ./home.nix;
             };
           }

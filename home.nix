@@ -8,6 +8,12 @@
 
   home.stateVersion = "26.05";
 
+  # Use Zen for browser links (including Fusion sign-in callbacks).
+  programs.zen-browser = {
+    enable = true;
+    setAsDefaultBrowser = true;
+  };
+
   # IBus keeps its settings under /desktop/ibus/ in dconf (not /org/freedesktop/ibus).
   # Register the Hangul engine; only preloaded engines are used for switching.
   dconf.settings."desktop/ibus/general" = {
