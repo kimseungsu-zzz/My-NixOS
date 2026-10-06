@@ -161,11 +161,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791251924,
-        "narHash": "sha256-xhqnjF4bL7YyH/wf7YHCcBdwHTVyTkuTN0aLnk2Aa8Y=",
+        "lastModified": 1791252710,
+        "narHash": "sha256-e2q09jwAgurHDS2BsEKkUbzbsDiQkyZcC5pYQqN2OZg=",
         "ref": "refs/heads/main",
-        "rev": "1c41c259e1fc53c93c3a63b8015000567a735cfc",
-        "revCount": 51,
+        "rev": "3795333fa05888a71270a71372040ef1e5611433",
+        "revCount": 52,
         "type": "git",
         "url": "https://github.com/kimseungsu-zzz/nix-packages"
       },
