@@ -1,18 +1,25 @@
 { lib, pkgs, ... }:
 
 let
-  startEwwDesktopWidget = pkgs.writeShellScript "start-eww-desktop-widget" ''
-    ${pkgs.eww}/bin/eww daemon || true
-    for _ in $(${pkgs.coreutils}/bin/seq 1 20); do
-      if ${pkgs.eww}/bin/eww open dashboard; then
-        exit 0
-      fi
-      ${pkgs.coreutils}/bin/sleep 0.25
+  ewwPath = lib.makeBinPath (with pkgs; [ eww alsa-utils brightnessctl playerctl networkmanagerapplet ffmpeg mpc wireplumber ]);
+  startEwwWidgets = pkgs.writeShellScript "start-eww-widgets" ''
+    export PATH="${ewwPath}:$PATH"
+    ${pkgs.eww}/bin/eww --config "$HOME/.config/eww/bar" daemon
+    ${pkgs.eww}/bin/eww --config "$HOME/.config/eww/leftbar" daemon
+    for config in bar leftbar; do
+      for _ in $(${pkgs.coreutils}/bin/seq 1 40); do
+        if ${pkgs.eww}/bin/eww --config "$HOME/.config/eww/$config" ping >/dev/null 2>&1; then break; fi
+        ${pkgs.coreutils}/bin/sleep 0.25
+      done
     done
-    exit 1
+    ${pkgs.eww}/bin/eww --config "$HOME/.config/eww/bar" open bar --screen HDMI-A-1
+    for window in main pfp song sys_usg song_prog song_ctl audio quote sys_tray time; do
+      ${pkgs.eww}/bin/eww --config "$HOME/.config/eww/leftbar" open "$window" --screen HDMI-A-1
+    done
   '';
-  stopEwwDesktopWidget = pkgs.writeShellScript "stop-eww-desktop-widget" ''
-    ${pkgs.eww}/bin/eww kill >/dev/null 2>&1 || true
+  stopEwwWidgets = pkgs.writeShellScript "stop-eww-widgets" ''
+    ${pkgs.eww}/bin/eww --config "$HOME/.config/eww/bar" kill || true
+    ${pkgs.eww}/bin/eww --config "$HOME/.config/eww/leftbar" kill || true
   '';
 in
 
@@ -30,133 +37,24 @@ in
     setAsDefaultBrowser = true;
   };
 
-  # Eww is an independent dashboard layer over the empty Plasma desktop.
-  # Eww dashboard layout adapted to the compact clock and system modules in
-  # https://github.com/saimoomedits/eww-widgets, arranged as three matching tiles.
-  xdg.configFile."eww/eww.yuck".text = ''
-    (defpoll clock :interval "1s" :initial "00:00" `date '+%-I:%M'`)
-    (defpoll period :interval "1m" :initial "AM" `date '+%p'`)
-    (defpoll today :interval "1m" :initial "Loading date" `date '+%A, %B %-d'`)
-    (defpoll uptime :interval "1m" :initial "Checking uptime" `uptime -p | sed 's/^up //'`)
-
-    (defwidget launch-tile [symbol name command icon-class]
-      (button :class "launch-tile" :onclick command
-        (box :orientation "vertical" :spacing 10 :halign "center" :valign "center"
-          (label :class icon-class :text symbol)
-          (label :class "launch-name" :text name))))
-
-    (defwidget metric-tile [name value progress-class]
-      (box :orientation "vertical" :spacing 8
-        (box :orientation "horizontal" :spacing 8
-          (label :class "metric-name" :text name)
-          (label :class "metric-value" :hexpand true :halign "end" :text {round(value, 0)})
-          (label :class "metric-name" :text "%"))
-        (progress :class progress-class :value value)))
-
-    (defwidget dashboard-content []
-      (box :class "dashboard" :orientation "horizontal" :spacing 16 :halign "center" :valign "center"
-        (box :class "tile clock-tile" :orientation "vertical" :spacing 14
-          (box :orientation "horizontal" :spacing 14 :valign "center"
-            (label :class "clock" :text clock)
-            (box :orientation "vertical" :spacing 3 :valign "center"
-              (label :class "period" :text period)
-              (label :class "date" :text today)))
-          (box :class "divider")
-          (label :class "tile-caption" :halign "start" :text "UPTIME")
-          (label :class "uptime" :halign "start" :text uptime))
-        (box :orientation "vertical" :spacing 16
-          (box :class "tile welcome-tile" :orientation "vertical" :spacing 12
-            (label :class "eyebrow" :halign "start" :text "ELKOWAR'S WACKY WIDGETS")
-            (label :class "welcome-title" :halign "start" :text "Your desktop, at a glance")
-            (label :class "welcome-copy" :halign "start" :text "Time, system status, and quick access."))
-          (box :class "launch-row" :orientation "horizontal" :spacing 12
-            (launch-tile :symbol "◉" :name "Browser" :command "zen" :icon-class "icon-blue")
-            (launch-tile :symbol "F" :name "Fusion 360" :command "fusion360" :icon-class "icon-orange")
-            (launch-tile :symbol "▣" :name "Files" :command "dolphin" :icon-class "icon-green")
-            (launch-tile :symbol ">_" :name "Terminal" :command "terminator" :icon-class "icon-yellow")))
-        (box :class "tile system-tile" :orientation "vertical" :spacing 20
-          (label :class "tile-caption" :halign "start" :text "SYSTEM")
-          (metric-tile :name "CPU" :value {EWW_CPU.avg} :progress-class "cpu-progress")
-          (metric-tile :name "MEMORY" :value {EWW_RAM.used_mem_perc} :progress-class "ram-progress")
-          (label :class "system-footnote" :halign "start" :text "Intel Arc graphics"))))
-
-    (defwindow dashboard
-      :monitor "[\"HDMI-A-1\", \"eDP-1\", 0]"
-      :geometry (geometry :width "1600px" :height "740px" :anchor "center")
-      :stacking "bottom"
-      :exclusive false
-      :focusable "ondemand"
-      :windowtype "desktop"
-      :namespace "eww-desktop-widget"
-      (dashboard-content))
-  '';
-
-  xdg.configFile."eww/eww.scss".text = ''
-    * {
-      all: unset;
-      font-family: Pretendard, sans-serif;
-    }
-
-    .dashboard { padding: 24px; }
-    .tile {
-      background-color: rgba(30, 32, 44, 0.90);
-      border-radius: 11px;
-      padding: 22px;
-      box-shadow: 0 5px 16px rgba(8, 10, 18, 0.18);
-    }
-    .clock-tile { min-width: 340px; min-height: 260px; }
-    .system-tile { min-width: 300px; min-height: 260px; }
-    .welcome-tile { min-width: 690px; min-height: 155px; }
-    .clock { color: #89b4fa; font-size: 78px; font-weight: 700; }
-    .period { color: #a6e3a1; font-size: 28px; font-weight: 700; }
-    .date { color: #f9e2af; font-size: 16px; }
-    .divider { min-height: 1px; background-color: rgba(205, 214, 244, 0.12); margin: 4px 0; }
-    .tile-caption { color: #a6adc8; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
-    .uptime { color: #cdd6f4; font-size: 21px; }
-    .eyebrow { color: #a6adc8; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
-    .welcome-title { color: #cdd6f4; font-size: 32px; font-weight: 700; }
-    .welcome-copy { color: #bac2de; font-size: 16px; }
-    .launch-row { min-height: 130px; }
-    .launch-tile {
-      min-width: 126px;
-      min-height: 120px;
-      padding: 14px;
-      border-radius: 9px;
-      background-color: rgba(39, 42, 56, 0.96);
-      box-shadow: 0 3px 10px rgba(8, 10, 18, 0.14);
-    }
-    .launch-tile:hover { background-color: rgba(69, 71, 90, 0.98); }
-    .launch-name { color: #cdd6f4; font-size: 15px; font-weight: 700; }
-    .icon-blue { color: #89b4fa; font-size: 38px; font-weight: 700; }
-    .icon-orange { color: #fab387; font-size: 38px; font-weight: 700; }
-    .icon-green { color: #a6e3a1; font-size: 38px; font-weight: 700; }
-    .icon-yellow { color: #f9e2af; font-size: 34px; font-weight: 700; }
-    .metric-name { color: #bac2de; font-size: 14px; font-weight: 700; }
-    .metric-value { color: #cdd6f4; font-size: 14px; font-weight: 700; }
-    progress, progress trough, progress progress {
-      min-height: 12px;
-      border-radius: 8px;
-      background-color: rgba(205, 214, 244, 0.12);
-    }
-    .cpu-progress progress { background-color: #f38ba8; }
-    .ram-progress progress { background-color: #a6e3a1; }
-    .system-footnote { color: #a6adc8; font-size: 14px; }
-  '';
+  # Upstream widgets by saimoomedits, kept in their original layout and styling.
+  xdg.configFile."eww/bar".source = ./home/eww-widgets/bar;
+  xdg.configFile."eww/leftbar".source = ./home/eww-widgets/leftbar;
 
   # Keep Eww in a persistent user service. KDE's XDG-autostart units kill
   # child processes when their short-lived Exec script exits, which stopped
   # the daemon immediately after opening the widget.
   systemd.user.services.eww-desktop-widget = {
     Unit = {
-      Description = "Eww desktop widget";
+      Description = "Eww widgets from saimoomedits/eww-widgets";
       After = [ "graphical-session.target" ];
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = "${startEwwDesktopWidget}";
-      ExecStop = "${stopEwwDesktopWidget}";
+      ExecStart = "${startEwwWidgets}";
+      ExecStop = "${stopEwwWidgets}";
     };
     Install.WantedBy = [ "graphical-session.target" ];
   };

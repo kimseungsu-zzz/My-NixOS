@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+exec eww --config "$HOME/.config/eww/bar" open bar

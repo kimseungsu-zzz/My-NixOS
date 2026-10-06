@@ -11,5 +11,11 @@
     kicad
     vicinae
     eww
+    alsa-utils
+    brightnessctl
+    ffmpeg
+    mpc
+    networkmanagerapplet
+    wireplumber
   ];
 }
