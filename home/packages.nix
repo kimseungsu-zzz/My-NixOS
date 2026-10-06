@@ -10,5 +10,6 @@
     vlc
     kicad
     vicinae
+    eww
   ];
 }

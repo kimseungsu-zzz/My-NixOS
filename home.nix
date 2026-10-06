@@ -1,5 +1,18 @@
 { lib, pkgs, ... }:
 
+let
+  startEwwDesktopWidget = pkgs.writeShellScript "start-eww-desktop-widget" ''
+    ${pkgs.eww}/bin/eww daemon >/dev/null 2>&1 || true
+    for _ in $(${pkgs.coreutils}/bin/seq 1 20); do
+      if ${pkgs.eww}/bin/eww open dashboard >/dev/null 2>&1; then
+        exit 0
+      fi
+      ${pkgs.coreutils}/bin/sleep 0.25
+    done
+    exit 0
+  '';
+in
+
 {
   imports = [
     ./home/plasma.nix
@@ -13,6 +26,97 @@
     enable = true;
     setAsDefaultBrowser = true;
   };
+
+  # Eww is an independent widget layer, not a Plasma desktop shortcut. Keep a
+  # single small system-and-clock card over the otherwise clear desktop.
+  xdg.configFile."eww/eww.yuck".text = ''
+    (defpoll clock :interval "1s" :initial "00:00:00" `date '+%H:%M:%S'`)
+    (defpoll calendar :interval "1m" :initial "Loading date…" `date '+%A, %B %-d'`)
+
+    (defwidget desktop-card []
+      (box :class "card" :orientation "vertical" :spacing 8
+        (label :class "eyebrow" :text "ELKOWAR'S WACKY WIDGETS")
+        (label :class "clock" :halign "start" :text clock)
+        (label :class "calendar" :halign "start" :text calendar)
+        (box :class "stats" :orientation "horizontal" :spacing 8
+          (label :class "stat-label" :text "CPU")
+          (label :class "stat-value" :text {round(EWW_CPU.avg, 0)})
+          (label :class "stat-label" :text "%")
+          (label :class "spacer" :hexpand true)
+          (label :class "stat-label" :text "RAM")
+          (label :class "stat-value" :text {round(EWW_RAM.used_mem / 1048576, 0)}))))
+
+    (defwindow dashboard
+      :monitor 0
+      :geometry (geometry :x "32px" :y "84px" :width "330px" :height "190px" :anchor "top left")
+      :stacking "bottom"
+      :exclusive false
+      :focusable "none"
+      :namespace "eww-desktop-widget"
+      (desktop-card))
+  '';
+
+  xdg.configFile."eww/eww.scss".text = ''
+    * {
+      all: unset;
+      font-family: Pretendard, sans-serif;
+    }
+
+    .card {
+      background-color: rgba(30, 30, 46, 0.92);
+      border: 1px solid #45475a;
+      border-radius: 18px;
+      padding: 20px 22px;
+    }
+
+    .eyebrow {
+      color: #a6adc8;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .clock {
+      color: #cdd6f4;
+      font-size: 38px;
+      font-weight: 700;
+    }
+
+    .calendar {
+      color: #bac2de;
+      font-size: 13px;
+    }
+
+    .stats {
+      margin-top: 5px;
+    }
+
+    .stat-label {
+      color: #a6adc8;
+      font-size: 11px;
+    }
+
+    .stat-value {
+      color: #94e2d5;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .spacer {
+      min-width: 12px;
+    }
+  '';
+
+  xdg.configFile."autostart/eww-desktop-widget.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Name=Eww desktop widget
+    Comment=Open the clock and system status widget on the clear desktop
+    Exec=${startEwwDesktopWidget}
+    Terminal=false
+    OnlyShowIn=KDE;
+    X-KDE-autostart-after=panel
+  '';
 
   # IBus keeps its settings under /desktop/ibus/ in dconf (not /org/freedesktop/ibus).
   # Register the Hangul engine; only preloaded engines are used for switching.
