@@ -36,6 +36,12 @@ let
 
     spawn-at-startup "noctalia"
 
+    // Round and clip every window to its geometry.
+    window-rule {
+        geometry-corner-radius 16
+        clip-to-geometry true
+    }
+
     window-rule {
         match app-id="dev.noctalia.Noctalia"
         open-floating true
