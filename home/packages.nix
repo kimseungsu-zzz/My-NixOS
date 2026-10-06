@@ -1,11 +1,11 @@
-{ pkgs, spotifast, ... }:
+{ pkgs, ... }:
 {
   # User-level GUI applications.
   home.packages = with pkgs; [
     kdePackages.kate
     vscode
     brave
-    spotifast.packages.${pkgs.stdenv.hostPlatform.system}.default
+    spotify
     vlc
     kicad
     vicinae

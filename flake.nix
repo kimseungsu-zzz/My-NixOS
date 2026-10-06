@@ -33,12 +33,6 @@
     # Complete desktop shell for the Niri session (bar, launcher, notifications, controls).
     noctalia.url = "github:noctalia-dev/noctalia/cachix";
 
-    # Native Spotify client, packaged by its upstream flake.
-    spotifast = {
-      url = "github:crmne/spotifast";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Private monorepo: Studica Hardware Manager, Titan Config, KakaoTalk, Karousel (packages + NixOS
     # modules). Fetched over HTTPS with the gh credentials, like the other private inputs.
     nix-packages = {
@@ -53,7 +47,7 @@
     };
   };
 
-  outputs = { nixpkgs, hnc2020, nix-packages, codex-desktop-linux, claude-desktop, zen-browser, noctalia, spotifast, home-manager, ... }: {
+  outputs = { nixpkgs, hnc2020, nix-packages, codex-desktop-linux, claude-desktop, zen-browser, noctalia, home-manager, ... }: {
     # nixos-rebuild switch --flake .#linux
     # `nixos` is an alias: nixos-rebuild looks up the *current* hostname.
     nixosConfigurations = rec {
@@ -76,7 +70,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              extraSpecialArgs = { inherit nix-packages spotifast; };
+              extraSpecialArgs = { inherit nix-packages; };
               # An existing plasma config file is moved aside instead of
               # aborting the first activation.
               backupFileExtension = "hm-backup";
