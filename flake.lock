@@ -61,11 +61,11 @@
         "nixpkgs-legacy": "nixpkgs-legacy"
       },
       "locked": {
-        "lastModified": 1791191425,
-        "narHash": "sha256-vkp6YtOUF2Sm1/u1mcJgKNJ38IyAdiy3GgSCqPh6bgs=",
+        "lastModified": 1791350750,
+        "narHash": "sha256-HlChd8ET++X8UoL3A5RdDbOqX2VPUiPGItMboTZCdkg=",
         "ref": "refs/heads/main",
-        "rev": "3e8a27e213cb2aba0e330a06df36a7f684466ef7",
-        "revCount": 7,
+        "rev": "37d0f92bbdc275cb2da42965883d75544a038385",
+        "revCount": 8,
         "type": "git",
         "url": "https://github.com/kimseungsu-zzz/nixos-HNC2020"
       },
