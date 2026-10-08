@@ -31,6 +31,23 @@ in
 
   home.stateVersion = "26.05";
 
+
+  # Seed the OBS profile and scene collection once on new installations. Copying only missing
+  # files keeps OBS settings writable and preserves changes made later in the app.
+  home.activation.seedObsStudioConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    profile_dir="$HOME/.config/obs-studio/basic/profiles/Untitled"
+    scene_dir="$HOME/.config/obs-studio/basic/scenes"
+
+    if [ ! -e "$profile_dir/basic.ini" ]; then
+      $DRY_RUN_CMD install -Dm644 "${./config/obs-studio/profiles/Untitled/basic.ini}" "$profile_dir/basic.ini"
+    fi
+    if [ ! -e "$profile_dir/streamEncoder.json" ]; then
+      $DRY_RUN_CMD install -Dm644 "${./config/obs-studio/profiles/Untitled/streamEncoder.json}" "$profile_dir/streamEncoder.json"
+    fi
+    if [ ! -e "$scene_dir/Untitled.json" ]; then
+      $DRY_RUN_CMD install -Dm644 "${./config/obs-studio/scenes/Untitled.json}" "$scene_dir/Untitled.json"
+    fi
+  '';
   # Use Zen for browser links (including Fusion sign-in callbacks).
   programs.zen-browser = {
     enable = true;
