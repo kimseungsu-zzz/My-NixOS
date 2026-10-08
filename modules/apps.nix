@@ -83,6 +83,14 @@ in
   # services.xserver.enable pulls in xterm by default.
   services.xserver.excludePackages = [ pkgs.xterm ];
 
+  # File manager: Thunar with removable-media, archive and thumbnail support
+  # (mounts through the UDisks/GVFS services in modules/desktop.nix).
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs; [ thunar-volman thunar-archive-plugin ];
+  };
+  services.tumbler.enable = true;
+
   # Ventoy is flagged insecure in nixpkgs: its prebuilt boot images and tools are binary blobs
   # that cannot be audited (https://github.com/NixOS/nixpkgs/issues/404663). Only Ventoy is
   # allowed through; any other insecure package is still refused.
@@ -104,5 +112,11 @@ in
     ntfs3g
     dosfstools
     exfatprogs
+    # Thunar's "Open Terminal Here" goes through exo-open, which needs xfce4-mime-helper.
+    # Only that binary is linked in, not the rest of the Xfce settings apps.
+    (runCommand "xfce4-mime-helper" { } ''
+      mkdir -p $out/bin
+      ln -s ${xfce4-settings}/bin/xfce4-mime-helper $out/bin/
+    '')
   ];
 }

@@ -14,7 +14,6 @@ in
 
   # User-level GUI applications.
   home.packages = with pkgs; [
-    kdePackages.dolphin
     kdePackages.kate
     vscode
     brave

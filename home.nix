@@ -79,6 +79,30 @@
     };
   };
 
+  # Open folders in Thunar. mimeapps.list stays writable (apps register URL handlers in it),
+  # so the default is set in place instead of through xdg.mimeApps.
+  home.activation.defaultFileManager = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    $DRY_RUN_CMD ${pkgs.xdg-utils}/bin/xdg-mime default thunar.desktop inode/directory
+  '';
+
+  # foot for Thunar's "Open Terminal Here".
+  xdg.configFile."xfce4/helpers.rc".text = ''
+    TerminalEmulator=foot
+  '';
+  # Xfce ships no helper entry for foot.
+  xdg.dataFile."xfce4/helpers/foot.desktop".text = ''
+    [Desktop Entry]
+    Version=1.0
+    Type=X-XFCE-Helper
+    Icon=foot
+    Name=foot
+    StartupNotify=false
+    X-XFCE-Binaries=foot;
+    X-XFCE-Category=TerminalEmulator
+    X-XFCE-Commands=%B;
+    X-XFCE-CommandsWithParameter=%B -e %s;
+  '';
+
   # foot with the Catppuccin Mocha palette.
   programs.foot = {
     enable = true;
