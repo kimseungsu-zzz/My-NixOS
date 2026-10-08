@@ -53,6 +53,24 @@ let
         default-window-height { fixed 900; }
     }
 
+    // KakaoTalk (Wine) draws its own frame: let it float at its own size and skip the
+    // rounded clipping and focus ring that fight with it.
+    window-rule {
+        match app-id=r"^kakaotalk\.exe$"
+        open-floating true
+        geometry-corner-radius 0
+        clip-to-geometry false
+        focus-ring {
+            off
+        }
+        border {
+            off
+        }
+        shadow {
+            off
+        }
+    }
+
     window-rule {
         match app-id=r"(?i).*fusion.*"
         open-floating true
