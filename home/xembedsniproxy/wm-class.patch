@@ -1,0 +1,14 @@
+--- a/xembed-sni-proxy/sniproxy.cpp	2026-10-08 21:13:02.327885501 +0900
++++ b/xembed-sni-proxy/sniproxy.cpp	2026-10-08 21:13:02.329885554 +0900
+@@ -150,6 +150,11 @@
+     wm.setOpacity(0);
+ #endif
+ 
++    // Name the container so rootless Xwayland bridges (xwayland-satellite) give it an app-id
++    // that the Wayland compositor can match and hide.
++    static const char wmClass[] = "xembedsniproxy\0xembedsniproxy";
++    xcb_change_property(c, XCB_PROP_MODE_REPLACE, m_containerWid, XCB_ATOM_WM_CLASS, XCB_ATOM_STRING, 8, sizeof(wmClass), wmClass);
++
+     xcb_flush(c);
+ 
+     xcb_map_window(c, m_containerWid);

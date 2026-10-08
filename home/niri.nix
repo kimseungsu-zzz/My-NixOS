@@ -71,6 +71,15 @@ let
         }
     }
 
+    // The tray bridge's container window (home/xembedsniproxy): invisible, never focused.
+    window-rule {
+        match app-id="^xembedsniproxy$"
+        open-floating true
+        open-focused false
+        opacity 0.0
+        default-floating-position x=0 y=0 relative-to="bottom-right"
+    }
+
     window-rule {
         match app-id=r"(?i).*fusion.*"
         open-floating true
@@ -193,4 +202,19 @@ let
 in
 {
   xdg.configFile."niri/config.kdl".source = config;
+
+  # Puts X11 (XEmbed) tray icons, e.g. KakaoTalk's under Wine, into Noctalia's tray.
+  systemd.user.services.xembedsniproxy = {
+    Unit = {
+      Description = "XEmbed to StatusNotifierItem tray bridge";
+      After = [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.callPackage ./xembedsniproxy { }}/bin/xembedsniproxy";
+      Environment = [ "QT_QPA_PLATFORM=xcb" ];
+      Restart = "on-failure";
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
 }
