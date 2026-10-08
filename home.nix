@@ -104,6 +104,35 @@
     X-XFCE-CommandsWithParameter=${pkgs.util-linux}/bin/setsid -f %B -e %s;
   '';
 
+  # GTK look for Thunar and other GTK apps: dark adw-gtk3 with Papirus icons using
+  # Catppuccin Mocha mauve folders (matching modules/theme.nix).
+  gtk = {
+    enable = true;
+    theme = {
+      name = "adw-gtk3-dark";
+      package = pkgs.adw-gtk3;
+    };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.catppuccin-papirus-folders.override {
+        flavor = "mocha";
+        accent = "mauve";
+      };
+    };
+    cursorTheme = {
+      name = "catppuccin-mocha-mauve-cursors";
+      size = 24;
+    };
+    font = {
+      name = "Pretendard";
+      size = 10;
+    };
+    gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
+    # libadwaita (GTK4) apps ignore GTK themes; keep them on their own dark style.
+    gtk4.theme = null;
+  };
+  dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+
   # foot with the Catppuccin Mocha palette.
   programs.foot = {
     enable = true;
