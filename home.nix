@@ -89,7 +89,8 @@
   xdg.configFile."xfce4/helpers.rc".text = ''
     TerminalEmulator=foot
   '';
-  # Xfce ships no helper entry for foot.
+  # Xfce ships no helper entry for foot. foot is started detached (setsid -f): otherwise
+  # xfce4-mime-helper waits on it and Thunar reports an error once the terminal is closed.
   xdg.dataFile."xfce4/helpers/foot.desktop".text = ''
     [Desktop Entry]
     Version=1.0
@@ -99,8 +100,8 @@
     StartupNotify=false
     X-XFCE-Binaries=foot;
     X-XFCE-Category=TerminalEmulator
-    X-XFCE-Commands=%B;
-    X-XFCE-CommandsWithParameter=%B -e %s;
+    X-XFCE-Commands=${pkgs.util-linux}/bin/setsid -f %B;
+    X-XFCE-CommandsWithParameter=${pkgs.util-linux}/bin/setsid -f %B -e %s;
   '';
 
   # foot with the Catppuccin Mocha palette.
