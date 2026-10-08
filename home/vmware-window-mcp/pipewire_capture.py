@@ -98,6 +98,11 @@ def _cache_path() -> Path:
 
 
 async def _capture_pipewire_window() -> bytes:
+    if not os.environ.get("DBUS_SESSION_BUS_ADDRESS"):
+        runtime_dir = os.environ.get("XDG_RUNTIME_DIR")
+        if not runtime_dir:
+            raise RuntimeError("XDG_RUNTIME_DIR is missing; cannot reach the user's session bus")
+        os.environ["DBUS_SESSION_BUS_ADDRESS"] = f"unix:path={runtime_dir}/bus"
     bus = await MessageBus(bus_type=BusType.SESSION).connect()
     session_path = None
     pipewire_fd = None
