@@ -10,6 +10,7 @@ from dataclasses import asdict, dataclass
 from typing import Literal
 
 from mcp.server.fastmcp import FastMCP, Image
+from pipewire_capture import capture_pipewire_window
 
 
 server = FastMCP("vmware-window")
@@ -72,8 +73,14 @@ def _is_vmware_window(window_id: str) -> tuple[bool, str, str, int]:
         executable = ""
     name = os.path.basename(executable)
     vmware_process = name in {"vmware", "vmplayer", "vmware-vmx"} or "/vmware-workstation" in executable
-    vmware_identity = "vmware" in title.lower() or "vmware" in window_class.lower() or "vmplayer" in window_class.lower()
-    return vmware_process and vmware_identity, title, window_class, pid
+    # VMware's Nix appLoader path does not have a vmware executable basename,
+    # and XWayland can report its own PID. Its specific WM_CLASS/title pair is
+    # therefore the reliable identity; avoid matching Fusion's steam_proton class.
+    vmware_window_identity = (
+        window_class.casefold() in {"vmware", "vmplayer"}
+        and "vmware workstation" in title.casefold()
+    )
+    return vmware_window_identity or (vmware_process and "vmware" in title.casefold()), title, window_class, pid
 
 
 def _all_windows() -> list[VMwareWindow]:
@@ -126,12 +133,9 @@ def vmware_list_windows() -> dict:
 
 @server.tool()
 def vmware_capture_window(window_id: str) -> Image:
-    """Capture only the requested VMware window and return it as an image."""
-    window = _require_window(window_id)
-    geometry = f"{window.x},{window.y} {window.width}x{window.height}"
-    png = _run(["grim", "-g", geometry, "-"], timeout=10)
-    if not png.startswith(b"\x89PNG\r\n\x1a\n"):
-        raise RuntimeError("grim did not return a PNG screenshot")
+    """Capture VMware through the PipeWire portal; select VMware in its picker."""
+    _require_window(window_id)
+    png = capture_pipewire_window()
     return Image(data=png, format="png")
 
 
