@@ -132,10 +132,10 @@ def vmware_list_windows() -> dict:
 
 
 @server.tool()
-def vmware_capture_window(window_id: str) -> Image:
+async def vmware_capture_window(window_id: str) -> Image:
     """Capture VMware through the PipeWire portal; select VMware in its picker."""
     _require_window(window_id)
-    png = capture_pipewire_window()
+    png = await capture_pipewire_window()
     return Image(data=png, format="png")
 
 

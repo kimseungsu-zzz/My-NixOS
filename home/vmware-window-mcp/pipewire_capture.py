@@ -199,9 +199,9 @@ async def _capture_pipewire_window() -> bytes:
         bus.disconnect()
 
 
-def capture_pipewire_window() -> bytes:
+async def capture_pipewire_window() -> bytes:
     """Capture a window selected by the ScreenCast portal using PipeWire."""
     try:
-        return asyncio.run(_capture_pipewire_window())
+        return await _capture_pipewire_window()
     except (OSError, asyncio.TimeoutError) as exc:
         raise RuntimeError(f"Could not capture VMware through PipeWire: {exc}") from exc
