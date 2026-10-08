@@ -11,8 +11,10 @@ let
   '';
 in
 {
+
   # User-level GUI applications.
   home.packages = with pkgs; [
+    kdePackages.dolphin
     kdePackages.kate
     vscode
     brave
@@ -20,14 +22,25 @@ in
     vlc
     kicad
     vmwareWindowMcp
-    vicinae
-    eww
+    xwayland-satellite
     alsa-utils
     brightnessctl
     ffmpeg
     mpc
-    networkmanagerapplet
     wireplumber
+    grim
+    slurp
+    wl-clipboard
+    (writeShellScriptBin "screenshot-region" ''
+      set -eu
+      output_dir="$HOME/Pictures/Screenshots"
+      mkdir -p "$output_dir"
+      geometry="$(slurp)"
+      [ -n "$geometry" ] || exit 0
+      image="$output_dir/screenshot-$(date +%Y%m%d-%H%M%S).png"
+      grim -g "$geometry" "$image"
+      wl-copy --type image/png < "$image"
+    '')
   ];
 
 }

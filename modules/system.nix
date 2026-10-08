@@ -9,11 +9,16 @@
   };
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Common removable-drive formats. vfat covers FAT32 and is already used by
+  # the EFI partition; enable NTFS and exFAT for external storage as well.
+  boot.supportedFilesystems = [ "ntfs" "vfat" "exfat" ];
+
   # Intel laptop panel: PSR2 selective fetch fails ("Selective fetch area calculation
   # failed in pipe A" in dmesg) and causes black flicker when only part of the screen
   # updates (e.g. rotating a 3D view). Panel Self Refresh off fixes it.
   # quiet/splash/loglevel: no kernel or initrd text between the boot menu and the desktop.
-  boot.kernelParams = [ "i915.enable_psr=0" "consoleblank=0" "quiet" "splash" "loglevel=3" "udev.log_level=3" "rd.systemd.show_status=false"
+  # Keep the supported Iris Xe and Arc devices on i915; do not force-probe them with xe.
+  boot.kernelParams = [ "i915.enable_psr=0" "xe.force_probe=!*" "consoleblank=0" "quiet" "splash" "loglevel=3" "udev.log_level=3" "rd.systemd.show_status=false"
   ];
   boot.consoleLogLevel = 0;
   boot.initrd.verbose = false;
@@ -63,6 +68,11 @@
   services.openssh.enable = true;
 
   nixpkgs.config.allowUnfree = true;
+
+  nix.settings = {
+    extra-substituters = [ "https://noctalia.cachix.org" ];
+    extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
+  };
 
   # Automatic cleanup of old build results: every week, delete generations and
   # store paths older than 7 days (the running generation is always kept),

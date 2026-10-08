@@ -1,18 +1,25 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
-  # KDE Plasma on the Wayland session (X server kept for XWayland apps).
+  # Niri is the Wayland compositor and scrollable tiling window manager.
   services.xserver.enable = true;
+  # Removable-volume discovery and user-session mounting through UDisks/GVFS.
+  services.udisks2.enable = true;
+  services.gvfs.enable = true;
   services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
+  services.desktopManager.plasma6.enable = false;
+  programs.niri.enable = true;
 
-  # Log in automatically at boot (no SDDM password prompt). The screen lock is already
-  # disabled in home/plasma.nix (kscreenlockerrc).
+  # Log in automatically at boot (no SDDM password prompt).
   services.displayManager.autoLogin = {
     enable = true;
     user = "linux";
   };
-  services.displayManager.defaultSession = "plasma";
+  services.displayManager.defaultSession = "niri";
+
+  # SDDM autologin cannot unlock GNOME Keyring with the user's login password.
+  # Keep existing keyring files, but disable the daemon to prevent its boot prompt.
+  services.gnome.gnome-keyring.enable = false;
 
   services.xserver.xkb = {
     layout = "kr";
@@ -22,15 +29,7 @@
 
   services.printing.enable = true;
 
-  # Scrollable tiling (niri / PaperWM style, multi-monitor fork, source in the nix-packages repo) for KWin, plus
-  # the animation for windows that a
-  # script moves or resizes. Enabled in home/plasma.nix (kwinrc Plugins).
-  environment.systemPackages = [
-    pkgs.kwin-script-geometry-change
-  ];
-
-  # Bluetooth. The Plasma 6 session brings the BlueDevil tray applet/settings page.
-  # linux-firmware is needed for the controller (Intel Bluetooth loads firmware from it).
+  # Bluetooth and firmware for the Intel wireless controller. Noctalia supplies the UI.
   hardware.enableRedistributableFirmware = true;
   hardware.bluetooth = {
     enable = true;
@@ -45,6 +44,8 @@
       };
     };
   };
+  services.upower.enable = true;
+  services.power-profiles-daemon.enable = true;
 
   # BlueZ does not dial out to paired devices by itself after boot (it waits for the device to
   # connect). Connect every paired device once Bluetooth is up; ones that are off just time out.
@@ -69,24 +70,21 @@
     '';
   };
 
-  # Korean input: install the engine here instead of relying on the hnc module.
+  # Kime is Korean-first and provides both Wayland and XIM frontends; XIM is
+  # the path Proton/Wine applications use under XWayland.
   i18n.inputMethod = {
     enable = true;
-    type = "ibus";
-    ibus.engines = with pkgs.ibus-engines; [ hangul ];
-    # Plasma Wayland: KWin starts IBus itself (kwinrc InputMethod in home/plasma.nix) and
-    # talks to apps over the Wayland text-input protocol, so GTK_IM_MODULE/QT_IM_MODULE
-    # must stay unset. XMODIFIERS (XWayland/Wine) is still set.
-    ibus.waylandFrontend = true;
+    type = lib.mkForce "kime";
+    kime.daemonModules = [ "Xim" "Wayland" "Indicator" ];
+    kime.iconColor = "White";
+    kime.extraConfig = ''
+      engine:
+        default_category: Hangul
+    '';
   };
 
-  # Chromium/Electron apps (Brave, VS Code, Claude, ChatGPT, Spotify, ...) run through XWayland
-  # by default, where they get no input method. This makes them use native Wayland, which
-  # includes the text-input protocol (--enable-wayland-ime) that KWin forwards to IBus.
+  # Prefer native Wayland for Chromium/Electron applications when supported.
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
-
-  # Needed for home-manager dconf.settings (ibus-hangul keys).
-  programs.dconf.enable = true;
 
   # Sound with pipewire.
   services.pulseaudio.enable = false;

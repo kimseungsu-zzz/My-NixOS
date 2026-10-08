@@ -1,5 +1,4 @@
-# Catppuccin look for Plasma, applied from home/plasma.nix (workspace.*).
-# Change flavor/accent here and in home/plasma.nix together (names must match).
+# Catppuccin look for SDDM and the shared cursor theme.
 #   flavor: latte | frappe | macchiato | mocha     accent: mauve | blue | pink | ...
 { pkgs, ... }:
 
@@ -9,14 +8,6 @@ let
 in
 {
   environment.systemPackages = [
-    # Plasma colour scheme, global theme (Look and Feel), Aurorae window decorations.
-    (pkgs.catppuccin-kde.override {
-      flavour = [ flavor ];
-      accents = [ accent ];
-      winDecStyles = [ "modern" ];
-    })
-    # Papirus icons with Catppuccin folder colours (theme names Papirus, Papirus-Dark, ...).
-    (pkgs.catppuccin-papirus-folders.override { inherit flavor accent; })
     # Cursor theme "catppuccin-mocha-mauve-cursors".
     pkgs.catppuccin-cursors.mochaMauve
     # Login screen theme "catppuccin-mocha-mauve".

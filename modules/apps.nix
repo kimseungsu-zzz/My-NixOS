@@ -71,9 +71,17 @@ in
     extraPackages = [ pkgs.intel-media-driver ];
   };
 
-  # Terminal: Terminator instead of Konsole (colours in home.nix, default terminal and the
-  # Ctrl+Alt+T shortcut in home/plasma.nix).
+  # Terminal: foot instead of Konsole (colours in home.nix, Mod+Return in home/niri.nix).
   environment.plasma6.excludePackages = [ pkgs.kdePackages.konsole ];
+  # Apps with Terminal=true open in foot instead of falling back to xterm: Noctalia's
+  # launcher reads $TERMINAL, GLib/GIO apps use xdg-terminal-exec.
+  environment.sessionVariables.TERMINAL = "foot";
+  xdg.terminal-exec = {
+    enable = true;
+    settings.default = [ "foot.desktop" ];
+  };
+  # services.xserver.enable pulls in xterm by default.
+  services.xserver.excludePackages = [ pkgs.xterm ];
 
   # Ventoy is flagged insecure in nixpkgs: its prebuilt boot images and tools are binary blobs
   # that cannot be audited (https://github.com/NixOS/nixpkgs/issues/404663). Only Ventoy is
@@ -90,10 +98,11 @@ in
     distrobox
     nodejs
     python3
-    terminator
     rpiImager   # Raspberry Pi Imager, always as root
     ventoy-full-gtk  # bootable USB creator (run with sudo or via polkit)
     unzip
-    bambu-studio
+    ntfs3g
+    dosfstools
+    exfatprogs
   ];
 }

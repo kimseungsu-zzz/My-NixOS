@@ -71,10 +71,10 @@
     };
 
     # Ctrl+Alt+T (the built-in shortcut belonged to Konsole).
-    hotkeys.commands."launch-terminator" = {
-      name = "Launch Terminator";
+    hotkeys.commands."launch-foot" = {
+      name = "Launch foot";
       key = "Ctrl+Alt+T";
-      command = "terminator";
+      command = "foot";
     };
 
     # Top bar: floating, auto-hides (slides in when the pointer hits the top edge), 58px high, filling the width of each screen (so it adapts to
@@ -148,12 +148,11 @@
       # move focus, Meta+Shift+A/D to move a window, Meta+R to cycle widths, Meta+Space to
       # toggle floating for the focused window). overrideConfig resets kwinrc, so declare it.
       kwinrc.Plugins.karouselEnabled = true;
-      # Karousel tiles every normal window, which breaks Wine apps (Fusion 360, KakaoTalk): their
+      # Karousel tiles every normal window, which breaks Wine apps such as KakaoTalk: their
       # windows get resized/stolen. Wine windows have the .exe name as class, so keep them floating.
       # This replaces the built-in rule list, so the defaults are repeated (with [.] for the dot).
       kwinrc."Script-karousel".windowRules = builtins.toJSON [
         { class = ".*[.]exe"; tile = false; }
-        { class = "spotify"; tile = false; }
         { class = "(org[.]kde[.])?plasmashell"; tile = false; }
         { class = "(org[.]kde[.])?polkit-kde-authentication-agent-1"; tile = false; }
         { class = "(org[.]kde[.])?kded6"; tile = false; }
@@ -172,8 +171,8 @@
       kwinrc.Plugins.kwin4_effect_geometry_changeEnabled = true;
 
       # Default terminal for Dolphin / "Open terminal here" etc.
-      kdeglobals.General.TerminalApplication = "terminator";
-      kdeglobals.General.TerminalService = "terminator.desktop";
+      kdeglobals.General.TerminalApplication = "foot";
+      kdeglobals.General.TerminalService = "foot.desktop";
 
       # Korean keyboard. Plasma on Wayland reads the layout from kxkbrc (the NixOS
       # xkb options only reach SDDM/X11). Right Alt = Hangul, Right Ctrl = Hanja
