@@ -64,6 +64,8 @@ in
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
+    # OBS VA-API encoding and decoding on the Intel Iris Xe / Arc GPUs.
+    extraPackages = [ pkgs.intel-media-driver ];
   };
 
   # Terminal: Terminator instead of Konsole (colours in home.nix, default terminal and the
