@@ -71,7 +71,7 @@ async def _portal_request(bus: MessageBus, method, args: tuple, options: dict) -
         returned_path = await method(*args, options)
         if returned_path != request_path:
             raise RuntimeError(f"Portal request path mismatch: {returned_path}")
-        response, results = await asyncio.wait_for(response_future, timeout=180)
+        response, results = await asyncio.wait_for(response_future, timeout=60)
         if response != 0:
             raise RuntimeError("ScreenCast portal request was cancelled or denied")
         return results
@@ -97,7 +97,7 @@ def _cache_path() -> Path:
     return cache_root / "codex-vmware-window" / "screencast-restore-token"
 
 
-async def _capture_pipewire_window() -> bytes:
+async def _capture_pipewire_window(parent_window: str) -> bytes:
     if not os.environ.get("DBUS_SESSION_BUS_ADDRESS"):
         runtime_dir = os.environ.get("XDG_RUNTIME_DIR")
         if not runtime_dir:
@@ -136,7 +136,7 @@ async def _capture_pipewire_window() -> bytes:
             bus, screencast.call_select_sources, (session_path,), select_options
         )
         start_results = await _portal_request(
-            bus, screencast.call_start, (session_path, ""), {}
+            bus, screencast.call_start, (session_path, parent_window), {}
         )
 
         next_token = start_results.get("restore_token")
@@ -204,9 +204,12 @@ async def _capture_pipewire_window() -> bytes:
         bus.disconnect()
 
 
-async def capture_pipewire_window() -> bytes:
+async def capture_pipewire_window(x11_window_id: str) -> bytes:
     """Capture a window selected by the ScreenCast portal using PipeWire."""
+    if not x11_window_id.isdecimal():
+        raise ValueError("window_id must be a decimal X11 window ID")
+    parent_window = f"x11:{int(x11_window_id):x}"
     try:
-        return await _capture_pipewire_window()
+        return await _capture_pipewire_window(parent_window)
     except (OSError, asyncio.TimeoutError) as exc:
         raise RuntimeError(f"Could not capture VMware through PipeWire: {exc}") from exc
