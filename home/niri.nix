@@ -24,6 +24,10 @@ let
         xcursor-size 24
     }
 
+    // Ask apps to drop their own title bars. Without this, Chromium/Electron apps on
+    // Wayland (Spotify, VS Code, Brave, ...) draw Chromium's unstyled fallback frame.
+    prefer-no-csd
+
     environment {
         QT_QPA_PLATFORM "wayland"
         NIXOS_OZONE_WL "1"
