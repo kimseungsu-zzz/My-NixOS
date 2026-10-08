@@ -85,7 +85,8 @@
     settings = {
       main.font = "JetBrainsMono Nerd Font:size=11";
       scrollback.lines = 100000;
-      colors = {
+      csd.preferred = "none";
+      colors-dark = {
         background = "1e1e2e";
         foreground = "cdd6f4";
         cursor = "1e1e2e f5e0dc";
