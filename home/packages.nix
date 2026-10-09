@@ -9,6 +9,8 @@ let
     export GST_PLUGIN_SYSTEM_PATH_1_0="${pkgs.pipewire}/lib/gstreamer-1.0:${pkgs.gst_all_1.gst-plugins-base}/lib/gstreamer-1.0:${pkgs.gst_all_1.gst-plugins-good}/lib/gstreamer-1.0"
     exec ${vmwareMcpPython}/bin/python3 ${./vmware-window-mcp}/server.py "$@"
   '';
+  # Puts an image on the clipboard as PNG and BMP (Wine programs paste the BMP).
+  copyImage = pkgs.callPackage ./copy-image { };
 in
 {
 
@@ -30,6 +32,7 @@ in
     grim
     slurp
     wl-clipboard
+    copyImage
     (writeShellScriptBin "screenshot-region" ''
       set -eu
       output_dir="$HOME/Pictures/Screenshots"
@@ -38,7 +41,7 @@ in
       [ -n "$geometry" ] || exit 0
       image="$output_dir/screenshot-$(date +%Y%m%d-%H%M%S).png"
       grim -g "$geometry" "$image"
-      wl-copy --type image/png < "$image"
+      ${copyImage}/bin/copy-image "$image"
     '')
   ];
 
