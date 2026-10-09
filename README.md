@@ -32,10 +32,14 @@ sudo nixos-rebuild switch --flake .#linux
   file managers too.
 - X11 tray icons (KakaoTalk under Wine) reach Noctalia through KDE's `xembedsniproxy`, built on
   its own and run as a user service (`home/xembedsniproxy`).
-- Fusion 360 (`fusion360`) renders on the integrated GPU: ghost images stayed in the viewport on
-  the Arc A350M. `FUSION_GPU=arc fusion360` switches back, and
-  `FUSION_DXVK_HUD=fps,devinfo fusion360` shows a frame-rate overlay. Starting it while another
-  instance runs stops that one and exits; run it again.
+- Autodesk Fusion runs on Wine staging with DXVK, no container (`fusion360-wine`, from
+  nix-packages). First run: `fusion360-wine install`, then start "Autodesk Fusion (Wine)".
+  It renders on the integrated GPU (`FUSION_GPU=arc` for the Arc card) and
+  `FUSION_DXVK_HUD=fps,devinfo fusion360-wine` shows a frame-rate overlay. xwayland-satellite
+  ignores X11 window shapes and opacity, so the package hides Fusion's translucent overlay
+  window (`fusion-unveil`); the floating panels can still leave stale pieces for a moment.
+- The monitor is set to 3440x1440@100 in `home/niri.nix`; its default 50 Hz mode makes the
+  pointer and windows trail visibly. `ntsync` is loaded for Wine's thread synchronisation.
 
 WPILib VMX 2020 runs in an Ubuntu distrobox container (podman):
 `scripts/nixos-distrobox.sh` in the WPILibInstaller-Avalonia repo.

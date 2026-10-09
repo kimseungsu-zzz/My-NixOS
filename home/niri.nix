@@ -38,6 +38,12 @@ let
         path "${pkgs.xwayland-satellite}/bin/xwayland-satellite"
     }
 
+    // The monitor lists 3440x1440@100 next to its default 50 Hz mode; at 50 Hz the pointer and
+    // every window trail by a visible fraction of a second.
+    output "HDMI-A-1" {
+        mode "3440x1440@100.000"
+    }
+
     spawn-at-startup "noctalia"
 
     // Round and clip every window to its geometry.
@@ -102,6 +108,20 @@ let
         open-floating true
         open-fullscreen false
         open-maximized-to-edges false
+    }
+
+    // Fusion's floating panels (Browser, Timeline, ...) are separate Wine windows that repaint
+    // only the damaged part; the rounded clipping and shadow around them left stale and black
+    // areas behind. Draw them as plain rectangles, like KakaoTalk.
+    window-rule {
+        match app-id=r"(?i).*fusion.*"
+        match app-id=r"^steam_proton$"
+        match app-id=r"^fusion360\.exe$"
+        geometry-corner-radius 0
+        clip-to-geometry false
+        shadow {
+            off
+        }
     }
 
     debug {

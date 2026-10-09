@@ -9,6 +9,9 @@
   };
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Wine/Proton use /dev/ntsync (kernel 6.14+) for faster thread synchronisation.
+  boot.kernelModules = [ "ntsync" ];
+
   # Common removable-drive formats. vfat covers FAT32 and is already used by
   # the EFI partition; enable NTFS and exFAT for external storage as well.
   boot.supportedFilesystems = [ "ntfs" "vfat" "exfat" ];
