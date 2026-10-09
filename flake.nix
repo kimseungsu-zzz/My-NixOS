@@ -33,7 +33,7 @@
     # Complete desktop shell for the Niri session (bar, launcher, notifications, controls).
     noctalia.url = "github:noctalia-dev/noctalia/cachix";
 
-    # Private monorepo: Studica Hardware Manager, Titan Config, KakaoTalk, Karousel (packages + NixOS
+    # Private monorepo: Studica Hardware Manager, Titan Config, KakaoTalk (packages + NixOS
     # modules). Fetched over HTTPS with the gh credentials, like the other private inputs.
     nix-packages = {
       url = "git+https://github.com/kimseungsu-zzz/nix-packages";
@@ -61,7 +61,6 @@
           nix-packages.nixosModules.studica-hardware-manager
           nix-packages.nixosModules.titan-config
           nix-packages.nixosModules.kakaotalk
-          nix-packages.nixosModules.karousel
           nix-packages.nixosModules.legacylauncher
           nix-packages.nixosModules.zapret-gui
           { nix.settings.experimental-features = [ "nix-command" "flakes" ]; }
@@ -71,8 +70,8 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               extraSpecialArgs = { inherit nix-packages; };
-              # An existing plasma config file is moved aside instead of
-              # aborting the first activation.
+              # An existing config file is moved aside instead of aborting
+              # the activation.
               backupFileExtension = "hm-backup";
               sharedModules = [
                 ./home/fusion360.nix

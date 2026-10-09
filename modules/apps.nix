@@ -71,8 +71,7 @@ in
     extraPackages = [ pkgs.intel-media-driver ];
   };
 
-  # Terminal: foot instead of Konsole (colours in home.nix, Mod+Return in home/niri.nix).
-  environment.plasma6.excludePackages = [ pkgs.kdePackages.konsole ];
+  # Terminal: foot (colours in home.nix, Mod+Return in home/niri.nix).
   # Apps with Terminal=true open in foot instead of falling back to xterm: Noctalia's
   # launcher reads $TERMINAL, GLib/GIO apps use xdg-terminal-exec.
   environment.sessionVariables.TERMINAL = "foot";

@@ -7,7 +7,6 @@
   services.udisks2.enable = true;
   services.gvfs.enable = true;
   services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = false;
   programs.niri.enable = true;
 
   # Log in automatically at boot (no SDDM password prompt).
