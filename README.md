@@ -33,5 +33,10 @@ sudo nixos-rebuild switch --flake .#linux
 - X11 tray icons (KakaoTalk under Wine) reach Noctalia through KDE's `xembedsniproxy`, built on
   its own and run as a user service (`home/xembedsniproxy`).
 
+- Fusion 360 (`fusion360`) renders on the integrated GPU: ghost images stayed in the viewport on
+  the Arc A350M. `FUSION_GPU=arc fusion360` switches back, and
+  `FUSION_DXVK_HUD=fps,devinfo fusion360` shows a frame-rate overlay. Starting it while another
+  instance runs stops that one and exits; run it again.
+
 WPILib VMX 2020 runs in an Ubuntu distrobox container (podman):
 `scripts/nixos-distrobox.sh` in the WPILibInstaller-Avalonia repo.
