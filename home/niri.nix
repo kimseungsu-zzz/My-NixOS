@@ -77,6 +77,12 @@ let
         open-floating true
         open-focused false
         opacity 0.0
+        // opacity 0 hides the content only: the border and rounded corners would still show
+        // as a small ring in the corner.
+        border { off; }
+        focus-ring { off; }
+        shadow { off; }
+        geometry-corner-radius 0
         default-floating-position x=0 y=0 relative-to="bottom-right"
     }
 
