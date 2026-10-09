@@ -1,8 +1,8 @@
-# copy-image IMAGE: put an image on the Wayland clipboard as PNG and BMP at once.
+# copy-image IMAGE: put an image on the Wayland clipboard as PNG and BMP, plus the file itself.
 #
 # wl-copy offers one MIME type. Wine turns image/bmp into CF_DIB but does not paste image/png into
 # Windows programs such as KakaoTalk; xwayland-satellite passes every offered type on to X11.
-{ stdenv, lib, symlinkJoin, writeShellScriptBin, pkg-config, wayland, wayland-scanner
+{ stdenv, lib, symlinkJoin, writeShellScriptBin, coreutils, pkg-config, wayland, wayland-scanner
 , wayland-protocols, imagemagick }:
 
 let
@@ -24,12 +24,34 @@ let
 
   copyImage = writeShellScriptBin "copy-image" ''
     set -eu
-    image="$1"
-    bmp="$(mktemp --suffix=.bmp)"
-    trap 'rm -f "$bmp"' EXIT
+    image="$(${coreutils}/bin/realpath "$1")"
+    tmp="$(${coreutils}/bin/mktemp -d)"
+    trap 'rm -rf "$tmp"' EXIT
+
+    # Percent-encode a path for a file:// URI.
+    uri_encode() {
+      local LC_ALL=C s="$1" out="" c hex i
+      for ((i = 0; i < ''${#s}; i++)); do
+        c="''${s:i:1}"
+        case "$c" in
+          [a-zA-Z0-9._~/-]) out+="$c" ;;
+          *) printf -v hex '%%%02X' "'$c"; out+="$hex" ;;
+        esac
+      done
+      printf '%s' "$out"
+    }
+    uri="file://$(uri_encode "$image")"
+
     # BMP3: 24-bit without alpha, what Windows programs expect from CF_DIB.
-    ${imagemagick}/bin/magick "$image" BMP3:"$bmp"
-    ${wlCopyTypes}/bin/wl-copy-types image/png="$image" image/bmp="$bmp"
+    ${imagemagick}/bin/magick "$image" BMP3:"$tmp/image.bmp"
+    # File managers paste files, not pixels: also offer the file itself (Thunar reads
+    # x-special/gnome-copied-files, other toolkits text/uri-list).
+    printf '%s\r\n' "$uri" > "$tmp/uri-list"
+    printf 'copy\n%s' "$uri" > "$tmp/gnome-copied-files"
+
+    ${wlCopyTypes}/bin/wl-copy-types \
+      image/png="$image" image/bmp="$tmp/image.bmp" \
+      text/uri-list="$tmp/uri-list" x-special/gnome-copied-files="$tmp/gnome-copied-files"
   '';
 in
 symlinkJoin {
