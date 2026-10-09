@@ -34,10 +34,10 @@ sudo nixos-rebuild switch --flake .#linux
   its own and run as a user service (`home/xembedsniproxy`).
 - Autodesk Fusion runs on Wine staging with DXVK, no container (`fusion360-wine`, from
   nix-packages). First run: `fusion360-wine install`, then start "Autodesk Fusion (Wine)".
-  It renders on the integrated GPU (`FUSION_GPU=arc` for the Arc card) and
-  `FUSION_DXVK_HUD=fps,devinfo fusion360-wine` shows a frame-rate overlay. xwayland-satellite
-  ignores X11 window shapes and opacity, so the package hides Fusion's translucent overlay
-  window (`fusion-unveil`); the floating panels can still leave stale pieces for a moment.
+  It opens in its own X server (a window of this session) with the picom compositor, because
+  xwayland-satellite ignores X11 window shapes and opacity and left black blocks behind
+  Fusion's floating panels. The Arc card renders the 3D view; `FUSION_GPU=igpu` selects the
+  integrated one, `FUSION_DXVK_HUD=fps,devinfo` shows a frame-rate overlay.
 - The monitor is set to 3440x1440@100 in `home/niri.nix`; its default 50 Hz mode makes the
   pointer and windows trail visibly. `ntsync` is loaded for Wine's thread synchronisation.
 
