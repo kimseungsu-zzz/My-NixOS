@@ -110,9 +110,12 @@ let
         open-maximized-to-edges false
     }
 
-    // Fusion runs in its own X server, shown as one window; round it like the others.
+    // Fusion runs in its own X server, shown as one window; round it like the others. It opens
+    // as wide as that X server (fusion360-wine starts it at 2752x1370, plus the 4 px border), or
+    // Fusion would draw into more than the window shows.
     window-rule {
         match app-id=r"^org\.freedesktop\.Xwayland$"
+        default-column-width { fixed 2756; }
         geometry-corner-radius 16
         clip-to-geometry true
     }
