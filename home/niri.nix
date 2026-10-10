@@ -110,18 +110,11 @@ let
         open-maximized-to-edges false
     }
 
-    // Fusion's floating panels (Browser, Timeline, ...) are separate Wine windows that repaint
-    // only the damaged part; the rounded clipping and shadow around them left stale and black
-    // areas behind. Draw them as plain rectangles, like KakaoTalk.
+    // Fusion runs in its own X server, shown as one window; round it like the others.
     window-rule {
-        match app-id=r"(?i).*fusion.*"
-        match app-id=r"^steam_proton$"
-        match app-id=r"^fusion360\.exe$"
-        geometry-corner-radius 0
-        clip-to-geometry false
-        shadow {
-            off
-        }
+        match app-id=r"^org\.freedesktop\.Xwayland$"
+        geometry-corner-radius 16
+        clip-to-geometry true
     }
 
     debug {
